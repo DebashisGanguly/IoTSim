@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Config>
+    <ApplicationPeriod>100000</ApplicationPeriod>
+    <ApplicationDataSize>0.01</ApplicationDataSize>
+    <Granularity>3600</Granularity>
+    <Battery>
+        <InitialEnergy>13500000</InitialEnergy>
+        <BatteryLeakage>5.0</BatteryLeakage>
+        <CutOffThreshold>10.0</CutOffThreshold>
+    </Battery>
+    <CommProtocol>
+        <Techno Name="BLE5.0">
+            <MaxPacketSize>245</MaxPacketSize>
+            <PHYRate>1</PHYRate>
+            <PHYOverhead>64</PHYOverhead>
+            <MACOverhead>48</MACOverhead>
+            <IPv6Overhead>16</IPv6Overhead>
+            <SynchroPeriod>32000</SynchroPeriod>
+            <ClockAccuracy>inf</ClockAccuracy>
+            <PacketDeliveryRatio>100</PacketDeliveryRatio>
+            <PowerConsumption HWName="nRF51822">
+                <Rx>42.3</Rx>
+                <Tx>37.2</Tx>
+                <CPUIdle>13.2</CPUIdle>
+                <Sleep>0.0078</Sleep>
+            </PowerConsumption>
+        </Techno>
+        <Techno Name="802.11ah9_16">
+            <MaxPacketSize>1280</MaxPacketSize>
+            <PHYRate></PHYRate>
+            <PHYOverhead>240</PHYOverhead>
+            <MACOverhead>80</MACOverhead>
+            <IPv6Overhead>320</IPv6Overhead>
+            <SynchroPeriod>163830000000</SynchroPeriod>
+            <ClockAccuracy>inf</ClockAccuracy>
+            <PacketDeliveryRatio>100</PacketDeliveryRatio>
+            <PowerConsumption HWName="200Rx">
+                <Rx>230</Rx>
+                <Tx>400</Tx>
+                <CPUIdle>30</CPUIdle>
+                <Sleep>0.0075</Sleep>
+            </PowerConsumption>
+        </Techno>
+    </CommProtocol>
+    <TraceFile>./DeviceLifetimeEvents.xml</TraceFile>
+</Config>
