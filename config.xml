@@ -27,7 +27,7 @@
         </Techno>
         <Techno Name="802.11ah9_16">
             <MaxPacketSize>1280</MaxPacketSize>
-            <PHYRate></PHYRate>
+            <PHYRate>78.0</PHYRate>
             <PHYOverhead>240</PHYOverhead>
             <MACOverhead>80</MACOverhead>
             <IPv6Overhead>320</IPv6Overhead>
