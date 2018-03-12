@@ -1,5 +1,3 @@
-from CommPowerState import CommPowerState
-
 class NetProtocol:
 	def __init__(self, **kwargs):
 		self.TechnoName = kwargs.pop('TechnoName')
@@ -11,7 +9,6 @@ class NetProtocol:
 		self.SynchroPeriod = kwargs.pop('SynchroPeriod')
 		self.ClockAccuracy = kwargs.pop('ClockAccuracy')
 		self.PacketDeliveryRatio = kwargs.pop('PacketDeliveryRatio')
-		self.CommPowerState = kwargs.pop('CommPowerState')
 
 	def __repr__(self):
 			string = "\n\n\t\tTechnology Details:\n"
@@ -24,6 +21,5 @@ class NetProtocol:
 			string += "\n\t\t\tSynchronization Period = " + str(self.SynchroPeriod) + " ms"
 			string += "\n\t\t\tClock Accuracy = " + str(self.ClockAccuracy) + " ppm"
 			string += "\n\t\t\tPacket Delivery Ratio = " + str(self.PacketDeliveryRatio) + " %"
-			string += str(self.CommPowerState)
 			return string
 

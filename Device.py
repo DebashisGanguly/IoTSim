@@ -14,6 +14,7 @@ class Device:
 		string += "\n\tApplication Data Size = " + str(self.ApplicationDataSize) + " kB"
 		string += "\n\tGranularity = " + str(self.Granularity) + " s"
 		string += str(self.Battery)
+		string += str(self.CommPowerState)
 		string += "\n\n\tCommunication Protocols:"
 		for CommProtocol in self.CommProtocolList:
 			string += str(CommProtocol)
@@ -33,6 +34,13 @@ class Device:
 		BatteryLeakage = Decimal(BatterySubTree.find('BatteryLeakage').text)
 		CutOffThreshold = Decimal(BatterySubTree.find('CutOffThreshold').text)
 		self.Battery = Battery(InitialEnergy, BatteryLeakage, CutOffThreshold)
+		PowerConsumption = Root.find('PowerConsumption')
+		HWName = PowerConsumption.get('HWName')
+		Rx = Decimal(PowerConsumption.find('Rx').text)
+		Tx = Decimal(PowerConsumption.find('Tx').text)
+		CPUIdle = Decimal(PowerConsumption.find('CPUIdle').text)
+		Sleep = Decimal(PowerConsumption.find('Sleep').text)
+		self.CommPowerState = CommPowerState(HWName, Rx, Tx, CPUIdle, Sleep)
 		CommProtocolSubTree = Root.find('CommProtocol')
 		self.CommProtocolList = []
 		for Techno in CommProtocolSubTree.findall('Techno'):
@@ -45,14 +53,7 @@ class Device:
 			SynchroPeriod = Decimal(Techno.find('SynchroPeriod').text)
 			ClockAccuracy = Decimal(Techno.find('ClockAccuracy').text)
 			PacketDeliveryRatio = Decimal(Techno.find('PacketDeliveryRatio').text)
-			PowerConsumption = Techno.find('PowerConsumption')
-			HWName = PowerConsumption.get('HWName')
-			Rx = Decimal(PowerConsumption.find('Rx').text)
-			Tx = Decimal(PowerConsumption.find('Tx').text)
-			CPUIdle = Decimal(PowerConsumption.find('CPUIdle').text)
-			Sleep = Decimal(PowerConsumption.find('Sleep').text)
-			CommPowerStateObj = CommPowerState(HWName, Rx, Tx, CPUIdle, Sleep)
-			NetProtocolObj = NetProtocolFactory.getNetProtocol(TechnoName, TechnoName = TechnoName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, CommPowerState = CommPowerStateObj)
+			NetProtocolObj = NetProtocolFactory.getNetProtocol(TechnoName, TechnoName = TechnoName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio)
 			self.CommProtocolList.append(NetProtocolObj)
 		self.TraceFile = Root.find('TraceFile').text
 		self.populateLifetimeEvents(self.TraceFile)
