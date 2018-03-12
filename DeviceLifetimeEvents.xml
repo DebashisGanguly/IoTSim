@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<DeviceLifetimeEvent>
+	<Event Type="Network">
+		<TimeOffset>1000</TimeOffset>
+		<EventParameter>
+			<Name>BLE5.0</Name>
+			<ClockAccuracy>inf</ClockAccuracy>
+            <PacketDeliveryRatio>80</PacketDeliveryRatio>
+		</EventParameter>
+	</Event>
+	<Event Type="Network">
+		<TimeOffset>2500</TimeOffset>
+		<EventParameter>
+			<Name>802.11ah9_16</Name>
+			<ClockAccuracy>80</ClockAccuracy>
+            <PacketDeliveryRatio>100</PacketDeliveryRatio>
+		</EventParameter>
+	</Event>
+</DeviceLifetimeEvent>

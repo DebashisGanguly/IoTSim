@@ -1,9 +1,11 @@
 import xml.etree.ElementTree as ET
 from decimal import Decimal
+from Queue import Queue
 from Battery import Battery
 from CommPowerState import CommPowerState
 from NetProtocol import NetProtocol
 from NetProtocolFactory import NetProtocolFactory
+from Event import Event
 
 class Device:
 	def __repr__(self):
@@ -15,6 +17,9 @@ class Device:
 		string += "\n\n\tCommunication Protocols:"
 		for CommProtocol in self.CommProtocolList:
 			string += str(CommProtocol)
+		string += "\nDevice Lifetime Events:\n"
+		for TraceEvent in list(self.EventQueue.queue):
+			string += str(TraceEvent)
 		return string
 
 	def __init__(self, config):
@@ -49,3 +54,16 @@ class Device:
 			CommPowerStateObj = CommPowerState(HWName, Rx, Tx, CPUIdle, Sleep)
 			NetProtocolObj = NetProtocolFactory.getNetProtocol(TechnoName, TechnoName = TechnoName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, CommPowerState = CommPowerStateObj)
 			self.CommProtocolList.append(NetProtocolObj)
+		self.TraceFile = Root.find('TraceFile').text
+		self.populateLifetimeEvents(self.TraceFile)
+
+	def populateLifetimeEvents(self, TraceFile):
+		self.EventQueue = Queue()
+		ConfigTree = ET.parse(TraceFile)
+		Root = ConfigTree.getroot()
+		for TraceEvent in Root.findall('Event'):
+			Type = TraceEvent.get('Type')
+			TimeOffset = Decimal(TraceEvent.find('TimeOffset').text)
+			EventParamTree = TraceEvent.find('EventParameter')
+			NewEvent = Event(Type, TimeOffset, EventParamTree)
+			self.EventQueue.put(NewEvent)
