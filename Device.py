@@ -53,7 +53,8 @@ class Device:
 			SynchroPeriod = Decimal(Techno.find('SynchroPeriod').text)
 			ClockAccuracy = Decimal(Techno.find('ClockAccuracy').text)
 			PacketDeliveryRatio = Decimal(Techno.find('PacketDeliveryRatio').text)
-			NetProtocolObj = NetProtocolFactory.getNetProtocol(TechnoName, TechnoName = TechnoName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio)
+			TechnoSpecificParamTree = Techno.find('TechnoSpecificParam')
+			NetProtocolObj = NetProtocolFactory.getNetProtocol(TechnoName, TechnoName = TechnoName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, TechnoSpecificParamTree = TechnoSpecificParamTree)
 			self.CommProtocolList.append(NetProtocolObj)
 		self.TraceFile = Root.find('TraceFile').text
 		self.populateLifetimeEvents(self.TraceFile)
