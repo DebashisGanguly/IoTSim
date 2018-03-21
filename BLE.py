@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-from decimal import Decimal
 from NetProtocol import NetProtocol
 
 class BLE(NetProtocol):
@@ -7,8 +6,8 @@ class BLE(NetProtocol):
 		NetProtocol.__init__(self, **kwargs)
 		#protocol specific parameters
 		TechnoSpecificParamTree = kwargs.pop('TechnoSpecificParamTree')
-		self.TIFS = Decimal(TechnoSpecificParamTree.find('TIFS').text)
-		LLDataHeader = Decimal(TechnoSpecificParamTree.find('LLDataHeader').text)
+		self.TIFS = float(TechnoSpecificParamTree.find('TIFS').text)
+		LLDataHeader = float(TechnoSpecificParamTree.find('LLDataHeader').text)
 		self.ackTime = (self.MACOverhead - LLDataHeader) / 	self.PHYRate + self.PHYOverhead	
 		self.pollTime = self.MACOverhead / self.PHYRate + self.PHYOverhead
 

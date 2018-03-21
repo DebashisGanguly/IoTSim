@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-from decimal import Decimal
 from NetProtocol import NetProtocol
 
 class HaLow(NetProtocol):
@@ -7,21 +6,21 @@ class HaLow(NetProtocol):
 		NetProtocol.__init__(self, **kwargs)
 		#protocol specific parameters
 		TechnoSpecificParamTree = kwargs.pop('TechnoSpecificParamTree')
-		self.SIFS = Decimal(TechnoSpecificParamTree.find('SIFS').text)
-		self.DIFS = Decimal(TechnoSpecificParamTree.find('DIFS').text)
-		self.Backoff = Decimal(TechnoSpecificParamTree.find('Backoff').text)
-		FC = Decimal(TechnoSpecificParamTree.find('FC').text) 
-		Duration = Decimal(TechnoSpecificParamTree.find('Duration').text)
-		SenderAddress = Decimal(TechnoSpecificParamTree.find('SenderAddress').text) 
-		FCS = Decimal(TechnoSpecificParamTree.find('FCS').text)
-		Timestamp = Decimal(TechnoSpecificParamTree.find('Timestamp').text) 
-		BI = Decimal(TechnoSpecificParamTree.find('BI').text) 
-		Capability = Decimal(TechnoSpecificParamTree.find('Capability').text) 
-		IEHeader = Decimal(TechnoSpecificParamTree.find('IEHeader').text)
-		SSID = Decimal(TechnoSpecificParamTree.find('SSID').text)
-		Rates = Decimal(TechnoSpecificParamTree.find('Rates').text)  
-		DSParameterSet = Decimal(TechnoSpecificParamTree.find('DSParameterSet').text)
-		TIM = Decimal(TechnoSpecificParamTree.find('TIM').text)
+		self.SIFS = float(TechnoSpecificParamTree.find('SIFS').text)
+		self.DIFS = float(TechnoSpecificParamTree.find('DIFS').text)
+		self.Backoff = float(TechnoSpecificParamTree.find('Backoff').text)
+		FC = float(TechnoSpecificParamTree.find('FC').text) 
+		Duration = float(TechnoSpecificParamTree.find('Duration').text)
+		SenderAddress = float(TechnoSpecificParamTree.find('SenderAddress').text) 
+		FCS = float(TechnoSpecificParamTree.find('FCS').text)
+		Timestamp = float(TechnoSpecificParamTree.find('Timestamp').text) 
+		BI = float(TechnoSpecificParamTree.find('BI').text) 
+		Capability = float(TechnoSpecificParamTree.find('Capability').text) 
+		IEHeader = float(TechnoSpecificParamTree.find('IEHeader').text)
+		SSID = float(TechnoSpecificParamTree.find('SSID').text)
+		Rates = float(TechnoSpecificParamTree.find('Rates').text)  
+		DSParameterSet = float(TechnoSpecificParamTree.find('DSParameterSet').text)
+		TIM = float(TechnoSpecificParamTree.find('TIM').text)
 		IEBeacons = (IEHeader + SSID) +\
 					(IEHeader + Rates) +\
 					(IEHeader + DSParameterSet) +\

@@ -1,4 +1,3 @@
-from decimal import Decimal
 from fuzzymath import *
 
 class NetProtocol:
@@ -46,7 +45,7 @@ class NetProtocol:
 
 	def dataPacketTime(self, dataSize): # in us
 		if ( dataSize != 0 and dataSize <= self.MaxPacketSize * 8) :
-			return Decimal(dataSize) / self.PHYRate + self.totalPacketOverhead
+			return dataSize / self.PHYRate + self.totalPacketOverhead
 		elif dataSize == 0 :
 			return 0
 		else : 
@@ -91,22 +90,22 @@ class NetProtocol:
 			numFullTransmissions += 1 	
 		if lastCommPeriodParam['leftOverData'] > 0 :
 			numFullTransmissions += 1	
-		numTotalTransmissions = Decimal(numFullTransmissions) * self.PacketDeliveryRatio
+		numTotalTransmissions = numFullTransmissions * self.PacketDeliveryRatio / 100
 		numNonFullTransmission = 0			
 		if fullCommPeriodParam['leftOverData'] > 0 :
 			numNonFullTransmission += 1
 		if lastCommPeriodParam['leftOverData'] > 0 :
 			numNonFullTransmission += 1
 		self.TUDataSize = (numTotalTransmissions - numNonFullTransmission) * self.MaxPacketSize * 8 + \
-				          Decimal(fullCommPeriodParam['leftOverData'] * numFullCommPeriod) +  \
-				          Decimal(lastCommPeriodParam['leftOverData'])  #in bits
+				          fullCommPeriodParam['leftOverData'] * numFullCommPeriod +  \
+				          lastCommPeriodParam['leftOverData']  #in bits
 		self.TUTime = ApplicationPeriod / DutyCycle #in ms 
 		self.maxCapacity = self.TUDataSize / self.TUTime # bits / ms <=> kbps	
-		self.txTime = Decimal(numFullPackets) * self.maxPacketTime() + \
-					  Decimal(numFullCommPeriod) * self.dataPacketTime(fullCommPeriodParam['leftOverData']) + \
+		self.txTime = numFullPackets * self.maxPacketTime() + \
+					  numFullCommPeriod * self.dataPacketTime(fullCommPeriodParam['leftOverData']) + \
 					  self.dataPacketTime(lastCommPeriodParam['leftOverData'])		 
-		self.rxTime = Decimal(numFullTransmissions) * self.ackedTransmissionRxTime() + self.APRxOverhead() * Decimal(numCommPeriod)
-		self.idleTime = Decimal(numFullTransmissions) * self.ackedTransmissionIdleTime() + self.APIdleOverhead() * Decimal(numCommPeriod)
+		self.rxTime = numFullTransmissions * self.ackedTransmissionRxTime() + self.APRxOverhead() * numCommPeriod
+		self.idleTime = numFullTransmissions * self.ackedTransmissionIdleTime() + self.APIdleOverhead() * numCommPeriod
 
 
 	
