@@ -11,6 +11,9 @@ if __name__ == "__main__" :
 
 	print(str(device))
 
-	device.calcConsumedEnergy()
-	#while device.Battery.canSupportDevice():
-		#device.Battery.updateBatteryState(device.calcConsumedEnergy())
+	while device.Battery.canSupportDevice():
+		device.Battery.updateBatteryState(device.calcConsumedEnergy())
+		device.incLifetime()
+
+	print("Usable Device Lifetime: " + device.Lifetime)
+

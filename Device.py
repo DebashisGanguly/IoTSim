@@ -23,6 +23,7 @@ class Device:
 		return string
 
 	def __init__(self, config):
+		self.Lifetime = 0
 		ConfigTree = ET.parse('config.xml')
 		Root = ConfigTree.getroot()
 		self.ApplicationPeriod = float(Root.find('ApplicationPeriod').text)
@@ -77,8 +78,10 @@ class Device:
 								+ protocolTimings['timeRxMode']    * self.CommPowerState.Rx \
 								+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle \
 								+ protocolTimings['timeSleepMode'] * self.CommPowerState.Sleep # in mJ
-			print(protocolTimings)
 			if (minCommEnergyExpense == -1) or (CommEnergyExpense < minCommEnergyExpense):
 				minCommEnergyExpense = minCommEnergyExpense
 				bestCommProtocol = CommProtocol.TechnoName
 		return minCommEnergyExpense
+
+	def incLifetime(self):
+		self.Lifetime += self.ApplicationPeriod
