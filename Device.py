@@ -32,7 +32,7 @@ class Device:
 		InitialEnergy = float(BatterySubTree.find('InitialEnergy').text)
 		BatteryLeakage = float(BatterySubTree.find('BatteryLeakage').text)
 		CutOffThreshold = float(BatterySubTree.find('CutOffThreshold').text)
-		self.Battery = Battery(InitialEnergy, BatteryLeakage, CutOffThreshold)
+		self.Battery = Battery(InitialEnergy, BatteryLeakage, CutOffThreshold, self.ApplicationPeriod)
 		PowerConsumption = Root.find('PowerConsumption')
 		HWName = PowerConsumption.get('HWName')
 		Rx = float(PowerConsumption.find('Rx').text)
@@ -68,3 +68,17 @@ class Device:
 			EventParamTree = TraceEvent.find('EventParameter')
 			NewEvent = Event(Type, TimeOffset, EventParamTree)
 			self.EventQueue.put(NewEvent)
+
+	def calcConsumedEnergy(self):
+		minCommEnergyExpense = -1
+		for CommProtocol in self.CommProtocolList:
+			protocolTimings = CommProtocol.detProtocolTimings(float(self.ApplicationDataSize * 8 * pow(10,3)), self.ApplicationPeriod)
+			CommEnergyExpense =   protocolTimings['timeTxMode']    * self.CommPowerState.Tx \
+								+ protocolTimings['timeRxMode']    * self.CommPowerState.Rx \
+								+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle \
+								+ protocolTimings['timeSleepMode'] * self.CommPowerState.Sleep # in mJ
+			print(protocolTimings)
+			if (minCommEnergyExpense == -1) or (CommEnergyExpense < minCommEnergyExpense):
+				minCommEnergyExpense = minCommEnergyExpense
+				bestCommProtocol = CommProtocol.TechnoName
+		return minCommEnergyExpense

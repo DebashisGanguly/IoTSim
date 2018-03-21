@@ -22,3 +22,10 @@ class BLE(NetProtocol):
 	
 	def APIdleOverhead(self):
 		return self.TIFS
+
+	def synchroPeriodTimings(self, period):
+		output = {  'tx'	: self.ackTime,\
+					'rx'	: self.APRxOverhead(),\
+					'idle'	: self.APIdleOverhead() + self.TIFS,\
+					'sleep' : period - (self.ackTime + self.APRxOverhead() + self.APIdleOverhead() + self.TIFS)}
+		return output

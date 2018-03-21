@@ -11,10 +11,6 @@ if __name__ == "__main__" :
 
 	print(str(device))
 
-	for CommProtocol in device.CommProtocolList:
-		CommProtocol.calcNetworkTimings(device.ApplicationPeriod)
-		#print(CommProtocol.TUTime)
-		#print(CommProtocol.maxCapacity)
-		#print(CommProtocol.txTime)
-		#print(CommProtocol.rxTime)
-		#print(CommProtocol.idleTime)
+	device.calcConsumedEnergy()
+	#while device.Battery.canSupportDevice():
+		#device.Battery.updateBatteryState(device.calcConsumedEnergy())

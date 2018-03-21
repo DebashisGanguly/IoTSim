@@ -41,3 +41,11 @@ class HaLow(NetProtocol):
 	
 	def APIdleOverhead(self):
 		return 0
+
+	def synchroPeriodTimings(self, period):
+		output = {	'tx'	: 0,\
+					'rx'	: self.APRxOverhead(),\
+					'idle'	: self.APIdleOverhead(),\
+					'sleep' : period - (self.APRxOverhead() + self.APIdleOverhead()) }
+		return output
+
