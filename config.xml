@@ -14,19 +14,22 @@
         <CPUIdle>13.2</CPUIdle>
         <Sleep>0.0078</Sleep>
     </PowerConsumption>
-    <Sensor HWName="Generic_Sensor">
+    <Sensor Name="Generic_Sensor">
         <StaticPower>1</StaticPower>
         <DynamicPower SetPoint="1">
-            <DataRate>1<\DataRate>
+            <DataRate>1</DataRate>
             <Power>1</Power>
-            <AcquireTime>1<\AcquireTime>
+            <AcquireTime>1</AcquireTime>
         </DynamicPower>
         <DynamicPower SetPoint="2">
-            <DataRate>1<\DataRate>
+            <DataRate>1</DataRate>
             <Power>1</Power>
-            <AcquireTime>1<\AcquireTime>
+            <AcquireTime>1</AcquireTime>
         </DynamicPower>
     </Sensor>
+    <ProcAlgo Name="Algo1">
+        <ProcTimePerBit>1</ProcTimePerBit>
+    </ProcAlgo>
     <CommProtocol>
         <Techno Name="BLE5.0">
             <MaxPacketSize>245</MaxPacketSize>
