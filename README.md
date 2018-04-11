@@ -36,7 +36,7 @@ Configuration Parameters
 			Tx Power = 400 V
 			Sleep Mode Power = 2.5 * 10^(-3) * Voltage = 0.0075 V
 
-        Sensors Paramters
+	Sensors Paramters
 	
 	        Units:
 		
@@ -54,9 +54,9 @@ Configuration Parameters
 				
 	Processing Algorithm Parameters
 	
-	        Units:
+		Units:
 		
-		        Number of 
+			Number of bits processed per second: bits/ms
 			
 	Network Protocol Hardware Parameters
 
