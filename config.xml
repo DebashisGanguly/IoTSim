@@ -18,17 +18,19 @@
         <Sensor Name="Generic_Sensor">
             <StaticPower>1</StaticPower>
             <DefaultPeriod>1</DefaultPeriod>
-            <DynamicPower SetPoint="1">
-                <DataRate>1</DataRate>
-                <Power>1</Power>
-                <AcquireTime>1</AcquireTime>
-                <Period>1</Period>
-            </DynamicPower>
-            <DynamicPower SetPoint="2">
-               <DataRate>1</DataRate>
-               <Power>1</Power>
-               <AcquireTime>1</AcquireTime>
-               <Period>1</Period>
+            <DynamicPower>
+                <SetPoint Setting="1">
+                    <DataRate>1</DataRate>
+                    <Power>1</Power>
+                    <AcquireTime>1</AcquireTime>
+                    <Period>1</Period>
+                </SetPoint>
+                <SetPoint Setting="2">
+                    <DataRate>1</DataRate>
+                    <Power>1</Power>
+                    <AcquireTime>1</AcquireTime>
+                    <Period>1</Period>
+                </SetPoint>
             </DynamicPower>
         </Sensor>
     </Sensors>
