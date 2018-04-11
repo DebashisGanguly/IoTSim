@@ -36,6 +36,28 @@ Configuration Parameters
 			Tx Power = 400 V
 			Sleep Mode Power = 2.5 * 10^(-3) * Voltage = 0.0075 V
 
+        Sensors Paramters
+	
+	        Units:
+		
+		        Static Power: mW
+			Default Sensing Period: ms
+			
+	        Dynamic Power Parameters
+		    
+		        Units:
+			
+			        Data Rate: bits/second
+				Power: mW
+				Data Acquisition time: ms
+				Sensing Period: ms
+				
+	Processing Algorithm Parameters
+	
+	        Units:
+		
+		        Number of 
+			
 	Network Protocol Hardware Parameters
 
 		Units:
