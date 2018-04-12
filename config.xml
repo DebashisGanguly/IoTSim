@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <Config>
-    <ApplicationPeriod>100000</ApplicationPeriod>
-    <ApplicationDataSize>0.01</ApplicationDataSize>
-    <Granularity>3600</Granularity>
     <Battery>
         <InitialEnergy>13500000</InitialEnergy>
         <BatteryLeakage>5.0</BatteryLeakage>
@@ -15,22 +12,24 @@
         <Sleep>0.0078</Sleep>
     </PowerConsumption>
     <Sensors>
-        <Sensor Name="Generic_Sensor">
+        <Sensor Name="Sensor_Setting1">
             <StaticPower>1</StaticPower>
             <DefaultPeriod>1</DefaultPeriod>
             <DynamicPower>
-                <SetPoint Setting="1">
-                    <DataRate>1</DataRate>
-                    <Power>1</Power>
-                    <AcquireTime>1</AcquireTime>
-                    <Period>1</Period>
-                </SetPoint>
-                <SetPoint Setting="2">
-                    <DataRate>1</DataRate>
-                    <Power>1</Power>
-                    <AcquireTime>1</AcquireTime>
-                    <Period>1</Period>
-                </SetPoint>
+                <DataRate>1</DataRate>
+                <Power>1</Power>
+                <AcquireTime>1</AcquireTime>
+                <Period>1</Period>
+            </DynamicPower>
+        </Sensor>
+        <Sensor Name="Sensor_Setting2">
+            <StaticPower>1</StaticPower>
+            <DefaultPeriod>1</DefaultPeriod>
+            <DynamicPower>
+                <DataRate>1</DataRate>
+                <Power>1</Power>
+                <AcquireTime>1</AcquireTime>
+                <Period>1</Period>
             </DynamicPower>
         </Sensor>
     </Sensors>
