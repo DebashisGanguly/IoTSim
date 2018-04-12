@@ -2,11 +2,6 @@ IoTSim
 
 Configuration Parameters
 	
-	Units:
-		Application Period: ms
-		Application Data Size: kB
-		Granularity: s
-
 	Battery Parameters
 
 		Units:	
