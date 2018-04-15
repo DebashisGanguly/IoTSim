@@ -3,7 +3,7 @@ from Device import Device
 
 if __name__ == "__main__" :
 	if (len(sys.argv) != 2) :
-		raise UserWarning("Usage : python Simulator.py <config_file.xml>" )
+		raise UserWarning("Usage: python Simulator.py config.json" )
 	else :
 		config = sys.argv[1]
 
@@ -11,9 +11,4 @@ if __name__ == "__main__" :
 
 	print(str(device))
 
-	while device.Battery.canSupportDevice():
-		device.Battery.updateBatteryState(device.calcConsumedEnergy())
-		device.incLifetime()
-
-	print("Usable Device Lifetime: " + device.Lifetime)
 

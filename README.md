@@ -1,17 +1,6 @@
 IoTSim
 
 Configuration Parameters
-	
-	Battery Parameters
-
-		Units:	
-			
-			BatteryLeakage: percentage
-			CutOffThreshold: percentage
-
-		Details of Specific Parameter:
-			
-			Initial Energy = 2 * AAA = 2 * 1250 (mAh) * 1.5 (V) = 3,750 Wh = 13.5 kJ = 13500000 mJ
 
 	Power Consumption State
 
@@ -33,25 +22,20 @@ Configuration Parameters
 
 	Sensors Paramters
 	
-	        Units:
-		
-		        Static Power: mW
+        Units:
+	
+	        Sensing Period: ms
+	        Data Rate: bits/second
+	        Data Acquisition time: ms
+	        Static Power: mW
+	        Dynamic Power: mW
 			Default Sensing Period: ms
-			
-	        Dynamic Power Parameters
-		    
-		        Units:
-			
-			        Data Rate: bits/second
-				Power: mW
-				Data Acquisition time: ms
-				Sensing Period: ms
 				
 	Processing Algorithm Parameters
 	
 		Units:
 		
-			Number of bits processed per second: bits/ms
+			Time to process aquired sensor data: ms/bit
 			
 	Network Protocol Hardware Parameters
 

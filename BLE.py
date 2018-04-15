@@ -1,13 +1,13 @@
-import xml.etree.ElementTree as ET
 from NetProtocol import NetProtocol
 
 class BLE(NetProtocol):
 	def __init__(self, **kwargs):
 		NetProtocol.__init__(self, **kwargs)
+		
 		#protocol specific parameters
-		TechnoSpecificParamTree = kwargs.pop('TechnoSpecificParamTree')
-		self.TIFS = float(TechnoSpecificParamTree.find('TIFS').text)
-		LLDataHeader = float(TechnoSpecificParamTree.find('LLDataHeader').text)
+		ProtocolSpecificParam = kwargs.pop('ProtocolSpecificParam')
+		self.TIFS = float(ProtocolSpecificParam['TIFS'])
+		LLDataHeader = float(ProtocolSpecificParam['LLDataHeader'])
 		self.ackTime = (self.MACOverhead - LLDataHeader) / 	self.PHYRate + self.PHYOverhead	
 		self.pollTime = self.MACOverhead / self.PHYRate + self.PHYOverhead
 

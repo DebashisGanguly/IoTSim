@@ -1,0 +1,170 @@
+{
+  "Config": {
+    "PowerConsumption": {
+      "HWName": "nRF51822",
+      "Rx": "42.3",
+      "Tx": "37.2",
+      "CPUIdle": "13.2",
+      "CPUActive": "20",
+      "Sleep": "0.0078"
+    },
+    "Sensing": {
+      "Sensor": [
+        {
+          "Id": "1",
+          "Name": "PIR",
+          "SensingPeriod": "1",
+          "DataRate": "1",
+          "AcquireTime": "1",
+          "StaticPower": "1",
+          "DynamicPower": "1"
+        },
+        {
+          "Id": "2",
+          "Name": "Cam_SetPoint1",
+          "SensingPeriod": "1",
+          "DataRate": "1",
+          "AcquireTime": "1",
+          "StaticPower": "1",
+          "DynamicPower": "1"
+        },
+        {
+          "Id": "3",
+          "Name": "Cam_SetPoint2",
+          "SensingPeriod": "1",
+          "DataRate": "1",
+          "AcquireTime": "1",
+          "StaticPower": "1",
+          "DynamicPower": "1"
+        }
+      ]
+    },
+    "Processing": {
+      "ProcAlgo": [
+        {
+          "Id": "1",
+          "Name": "FFT",
+          "ProcTimePerBit": "1"
+        },
+        {
+          "Id": "2",
+          "Name": "Aggregate",
+          "ProcTimePerBit": "1"
+        },
+        {
+          "Id": "3",
+          "Name": "VideoProcessing",
+          "ProcTimePerBit": "1"
+        }
+      ]
+    },
+    "Networking": {
+      "Protocol": [
+        {
+          "Id": "1",
+          "Name": "BLE5.0",
+          "MaxPacketSize": "245",
+          "PHYRate": "1",
+          "PHYOverhead": "64",
+          "MACOverhead": "48",
+          "IPv6Overhead": "16",
+          "SynchroPeriod": "32000",
+          "ClockAccuracy": "inf",
+          "PacketDeliveryRatio": "100",
+          "ProtocolSpecificParam": {
+            "TIFS": "150",
+            "LLDataHeader": "32"
+          }
+        },
+        {
+          "Id": "2",
+          "Name": "802.11ah9_16",
+          "MaxPacketSize": "1280",
+          "PHYRate": "78.0",
+          "PHYOverhead": "240",
+          "MACOverhead": "80",
+          "IPv6Overhead": "320",
+          "SynchroPeriod": "163830000000",
+          "ClockAccuracy": "inf",
+          "PacketDeliveryRatio": "100",
+          "ProtocolSpecificParam": {
+            "SIFS": "160.0",
+            "DIFS": "264",
+            "Backoff": "0",
+            "FC": "2",
+            "Duration": "2",
+            "SenderAddress": "6",
+            "FCS": "4",
+            "Timestamp": "4",
+            "BI": "2",
+            "Capability": "2",
+            "IEHeader": "2",
+            "SSID": "0",
+            "Rates": "1",
+            "DSParameterSet": "1",
+            "TIM": "4"
+          }
+        }
+      ]
+    },
+    "Context": {
+      "Workflow": [
+        {
+          "Id": "1",
+          "SensorId": "1",
+          "ProcAlgoId": "1",
+          "ProtocolId": "None"
+        },
+        {
+          "Id": "2",
+          "SensorId": "2",
+          "ProcAlgoId": "2",
+          "ProtocolId": "Any"
+        },
+        {
+          "Id": "3",
+          "SensorId": "3",
+          "ProcAlgoId": "3",
+          "ProtocolId": "None"
+        }
+      ]
+    },
+    "IFTTT": {
+      "Rule": [
+        {
+          "Id": "1",
+          "If": {
+            "External_Event": {
+              "type": "Sensing",
+              "Cur_Id": "1",
+              "Incident": "Motion"
+            }
+          },
+          "Then": {
+            "Action": {
+              "type": "Switch",
+              "New_Id": "2,3"
+            }
+          }
+        },
+        {
+          "Id": "2",
+          "If": {
+            "External_Event": {
+              "type": "Sensing",
+              "Cur_Id": "2,3",
+              "Incident": "Still"
+            }
+          },
+          "Then": {
+            "Action": {
+              "type": "Switch",
+              "New_Id": "1"
+            }
+          }
+        }
+      ]
+    },
+    "TraceFile": "./DeviceLifetimeEvents.xml"
+  }
+}
