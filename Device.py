@@ -4,6 +4,7 @@ from ProcAlgo import ProcAlgo
 from NetProtocol import NetProtocol
 from NetProtocolFactory import NetProtocolFactory
 from Workflow import Workflow
+from Rule import Rule
 import json
 
 class Device:
@@ -32,10 +33,10 @@ class Device:
 		for WorkflowVal in self.Workflows.values():
 			string += str(WorkflowVal)
 
-		#string += "\n\n\tIf-this-then-that Rules:\n"
+		string += "\n\n\tIf-this-then-that Rules:\n"
 
-		#for RuleVal in self.Rules.values():
-		#	string += str(RuleVal)
+		for RuleVal in self.Rules.values():
+			string += str(RuleVal)
 
 		return string
 
@@ -135,6 +136,26 @@ class Device:
 
 			WorkflowObj = Workflow(SensorId, ProcAlgoId, ProtocolId)
 			self.Workflows[WorkflowId] = WorkflowObj
+
+		IFTTTItem = configItems['IFTTT']
+
+		self.Rules = {}
+
+		for ruleItem in IFTTTItem['Rule']:
+			RuleId = int(ruleItem['Id'])
+
+			ifItem = ruleItem['If']
+			EventType = ifItem['EventType']
+			CurId = list(map(int, ifItem['CurId'].split(',')))
+			print(CurId)
+			Incident = ifItem['Incident']
+
+			thenItem = ruleItem['Then']
+			Action = thenItem['Action']
+			NewId = list(map(int, thenItem['NewId'].split(',')))
+
+			RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
+			self.Rules[RuleId] = RuleObj
 
 	#def calcConsumedEnergy(self):
 		#minCommEnergyExpense = -1

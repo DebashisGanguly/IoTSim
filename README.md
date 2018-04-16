@@ -29,7 +29,6 @@ Configuration Parameters
 	        Data Acquisition time: ms
 	        Static Power: mW
 	        Dynamic Power: mW
-			Default Sensing Period: ms
 				
 	Processing Algorithm Parameters
 	

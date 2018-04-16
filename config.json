@@ -55,6 +55,11 @@
           "Id": "3",
           "Name": "VideoProcessing",
           "ProcTimePerBit": "1"
+        },
+        {
+          "Id": "4",
+          "Name": "VideoCompression",
+          "ProcTimePerBit": "1"
         }
       ]
     },
@@ -117,15 +122,21 @@
         },
         {
           "Id": "2",
-          "SensorId": "2",
+          "SensorId": "1",
           "ProcAlgoId": "2",
           "ProtocolId": "Any"
         },
         {
           "Id": "3",
-          "SensorId": "3",
+          "SensorId": "2",
           "ProcAlgoId": "3",
           "ProtocolId": "None"
+        },
+        {
+          "Id": "3",
+          "SensorId": "3",
+          "ProcAlgoId": "4",
+          "ProtocolId": "Any"
         }
       ]
     },
@@ -134,37 +145,52 @@
         {
           "Id": "1",
           "If": {
-            "External_Event": {
-              "type": "Sensing",
-              "Cur_Id": "1",
-              "Incident": "Motion"
-            }
+            "EventType": "Sensing",
+            "CurId": "1",
+            "Incident": "Motion"
           },
           "Then": {
-            "Action": {
-              "type": "Switch",
-              "New_Id": "2,3"
-            }
+            "Action": "Switch",
+            "NewId": "2,3"
           }
         },
         {
           "Id": "2",
           "If": {
-            "External_Event": {
-              "type": "Sensing",
-              "Cur_Id": "2,3",
-              "Incident": "Still"
-            }
+            "EventType": "Sensing",
+            "CurId": "1",
+            "Incident": "Still"
           },
           "Then": {
-            "Action": {
-              "type": "Switch",
-              "New_Id": "1"
-            }
+            "Action": "Nothing",
+            "NewId": "1"
+          }
+        },
+        {
+          "Id": "3",
+          "If": {
+            "EventType": "Sensing",
+            "CurId": "2,3",
+            "Incident": "Still"
+          },
+          "Then": {
+            "Action": "Switch",
+            "NewId": "1"
+          }
+        },
+        {
+          "Id": "4",
+          "If": {
+            "EventType": "Sensing",
+            "CurId": "2,3",
+            "Incident": "Motion"
+          },
+          "Then": {
+            "Action": "Nothing",
+            "NewId": "2,3"
           }
         }
       ]
-    },
-    "TraceFile": "./DeviceLifetimeEvents.xml"
+    }
   }
 }
