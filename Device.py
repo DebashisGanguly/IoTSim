@@ -147,7 +147,6 @@ class Device:
 			ifItem = ruleItem['If']
 			EventType = ifItem['EventType']
 			CurId = list(map(int, ifItem['CurId'].split(',')))
-			print(CurId)
 			Incident = ifItem['Incident']
 
 			thenItem = ruleItem['Then']
