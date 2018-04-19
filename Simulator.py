@@ -11,7 +11,22 @@ if __name__ == "__main__" :
 		sensingTrace = sys.argv[3]
 
 	device = Device(config)
-
+	netTraceFile=open(networkingTrace,'r')
+	sensTraceFile=open(sensingTrace,'r')
+	netLine=netTraceFile.readline()
+	sensLine=sensTraceFile.readline()
+	netTime=0
+	sensTime=0
+	eventList=[]
+	while netLine or sensLine:
+		if netLine:
+			netTags=netLine.split(' ')
+			netTime=long(netTags[0])
+		if sensLine:
+			senseTags=sensLine.split(' ')
+			sensTime=long(senseTags[0])
+		if sensTime < netTime:
+			x=Event('Sensing)
 	print(str(device))
 
 
