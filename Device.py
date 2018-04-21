@@ -5,6 +5,7 @@ from NetProtocol import NetProtocol
 from NetProtocolFactory import NetProtocolFactory
 from Workflow import Workflow
 from Rule import Rule
+from Scheme import Scheme
 import json
 import math
 
@@ -36,8 +37,10 @@ class Device:
 
 		string += "\n\n\tIf-this-then-that Rules:\n"
 
-		for RuleVal in self.Rules.values():
-			string += str(RuleVal)
+		for SchemeId in self.Schemes:
+			string += str(self.Schemes[SchemeId])
+#		for RuleVal in self.Rules.values():
+#			string += str(RuleVal)
 
 		return string
 
@@ -138,24 +141,45 @@ class Device:
 			WorkflowObj = Workflow(SensorId, ProcAlgoId, ProtocolId)
 			self.Workflows[WorkflowId] = WorkflowObj
 
-		IFTTTItem = configItems['IFTTT']
+		Schemes = configItems['Schemes']
+		self.Schemes = {}
 
-		self.Rules = {}
+		for scheme in Schemes['Scheme']:
+			SchemeId = scheme['Id']
+			rules = []
+			for ruleItem in scheme['Rule']:
+				RuleId = int(ruleItem['Id'])
 
-		for ruleItem in IFTTTItem['Rule']:
-			RuleId = int(ruleItem['Id'])
+				ifItem = ruleItem['If']
+				EventType = ifItem['EventType']
+				CurId = list(map(int, ifItem['CurId'].split(',')))
+				Incident = ifItem['Incident']
 
-			ifItem = ruleItem['If']
-			EventType = ifItem['EventType']
-			CurId = list(map(int, ifItem['CurId'].split(',')))
-			Incident = ifItem['Incident']
+				thenItem = ruleItem['Then']
+				Action = thenItem['Action']
+				NewId = list(map(int, thenItem['NewId'].split(',')))
 
-			thenItem = ruleItem['Then']
-			Action = thenItem['Action']
-			NewId = list(map(int, thenItem['NewId'].split(',')))
+				RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
+				rules.append(RuleObj)
+			SchemeObj = Scheme(scheme['Name'], rules, scheme['DefaultWorkFlowId'])
+			self.Schemes[SchemeId] = SchemeObj
 
-			RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
-			self.Rules[RuleId] = RuleObj
+#		self.Rules = {}
+#
+#		for ruleItem in IFTTTItem['Rule']:
+#			RuleId = int(ruleItem['Id'])
+#
+#			ifItem = ruleItem['If']
+#			EventType = ifItem['EventType']
+#			CurId = list(map(int, ifItem['CurId'].split(',')))
+#			Incident = ifItem['Incident']
+#
+#			thenItem = ruleItem['Then']
+#			Action = thenItem['Action']
+#			NewId = list(map(int, thenItem['NewId'].split(',')))
+#
+#			RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
+#			self.Rules[RuleId] = RuleObj
 
 	def calcConsumedEnergy(self, workflow, pdr):
 		#minCommEnergyExpense = -1

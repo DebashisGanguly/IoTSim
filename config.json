@@ -140,55 +140,117 @@
         }
       ]
     },
-    "IFTTT": {
-      "Rule": [
+    "Schemes": {
+      "Scheme": [
         {
           "Id": "1",
-          "If": {
-            "EventType": "Sensing",
-            "CurId": "1",
-            "Incident": "Motion"
-          },
-          "Then": {
-            "Action": "Switch",
-            "NewId": "2,3"
-          }
+          "Name":"Smart",
+          "DefaultWorkFlowId": "1",
+          "Rule": [
+            {
+              "Id": "1",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Switch",
+                "NewId": "2,3"
+              }
+            },
+            {
+              "Id": "2",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1",
+                "Incident": "Still"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "1"
+              }
+            },
+            {
+              "Id": "3",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "2,3",
+                "Incident": "Still"
+              },
+              "Then": {
+                "Action": "Switch",
+                "NewId": "1"
+              }
+            },
+            {
+              "Id": "4",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "2,3",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "2,3"
+              }
+            }
+          ]
         },
         {
           "Id": "2",
-          "If": {
-            "EventType": "Sensing",
-            "CurId": "1",
-            "Incident": "Still"
-          },
-          "Then": {
-            "Action": "Nothing",
-            "NewId": "1"
-          }
-        },
-        {
-          "Id": "3",
-          "If": {
-            "EventType": "Sensing",
-            "CurId": "2,3",
-            "Incident": "Still"
-          },
-          "Then": {
-            "Action": "Switch",
-            "NewId": "1"
-          }
-        },
-        {
-          "Id": "4",
-          "If": {
-            "EventType": "Sensing",
-            "CurId": "2,3",
-            "Incident": "Motion"
-          },
-          "Then": {
-            "Action": "Nothing",
-            "NewId": "2,3"
-          }
+          "Name":"Basic",
+          "DefaultWorkFlowId": "1",
+          "Rule": [
+            {
+              "Id": "1",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Switch",
+                "NewId": "2,3"
+              }
+            },
+            {
+              "Id": "2",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1",
+                "Incident": "Still"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "1"
+              }
+            },
+            {
+              "Id": "3",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "2,3",
+                "Incident": "Still"
+              },
+              "Then": {
+                "Action": "Switch",
+                "NewId": "1"
+              }
+            },
+            {
+              "Id": "4",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "2,3",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "2,3"
+              }
+            }
+          ]
         }
       ]
     }
