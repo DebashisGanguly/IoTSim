@@ -6,6 +6,7 @@ from NetProtocolFactory import NetProtocolFactory
 from Workflow import Workflow
 from Rule import Rule
 import json
+import math
 
 class Device:
 	def __repr__(self):
@@ -156,15 +157,41 @@ class Device:
 			RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
 			self.Rules[RuleId] = RuleObj
 
-	#def calcConsumedEnergy(self):
+	def calcConsumedEnergy(self, workflow, pdr):
 		#minCommEnergyExpense = -1
+		ProtocolId = workflow['ProtocolId']
+		SensorId = workflow['SensorId']
+		ProcAlgoId = workflow['ProcAlgoId']
+		sensor = self.Sensors[SensorId]
+		procAlgo = self.ProcAlgos[ProcAlgoId]
+		ApplicationDataSize = sensor.AcquireTime * sensor.DataRate / (8 * 1000)
+		procTime = 8 * ApplicationDataSize / procAlgo.ProcTimePerBit
+		CommEnergyExpense = 0
+		busyTime = procTime + sensor.AcquireTime
+		sleepTime = sensor.SensingPeriod - busyTime
+		if ProtocolId != 0 or ProtocolId != -1:
+			CommProtocol = self.Protocols[ProtocolId]
+			CommProtocol.PacketDeliveryRatio = 100 * pdr
 		#for CommProtocol in self.CommProtocolList:
-			#protocolTimings = CommProtocol.detProtocolTimings(float(self.ApplicationDataSize * 8 * pow(10,3)), self.ApplicationPeriod)
-			#CommEnergyExpense =   protocolTimings['timeTxMode']    * self.CommPowerState.Tx \
-			#					+ protocolTimings['timeRxMode']    * self.CommPowerState.Rx \
-			#					+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle \
-			#					+ protocolTimings['timeSleepMode'] * self.CommPowerState.Sleep # in mJ
+			protocolTimings = CommProtocol.detProtocolTimings(float(ApplicationDataSize * 8), sensor.SensingPeriod)
+			CommEnergyExpense =   protocolTimings['timeTxMode']    * self.CommPowerState.Tx \
+								+ protocolTimings['timeRxMode']    * self.CommPowerState.Rx \
+								+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle
+			sleepTime = protocolTimings['timeSleepMode'] - busyTime
+			busyTime = busyTime + (protocolTimings['timeTxMode'] + protocolTimings['timeRxMode'] + protocolTimings['timeIdleMode']) / 1000
+		if busyTime > sensor.SensingPeriod:
+			print('Cannot perform all operations (sensing, processing and comm) within sensing period. Setting energy consumption to max value.\n')
+			print('Protocol: ' + CommProtocol.TechnoName + ', Sensor: ' + sensor.Name + ', ProcAlgo: ' + procAlgo.Name + '\n')
+			CommEnergyExpense = math.inf
+		else:
+			CommEnergyExpense = CommEnergyExpense + \
+								((sensor.AcquireTime + procTime) * self.CommPowerState.CPUActive + sensor.AcquireTime * (sensor.StaticPower + sensor.DynamicPower)) / 1000
+		retList = []
+		retList.append(CommEnergyExpense)
+		retList.append(busyTime)
+		retList.append(sleepTime)
+			#					+  * self.CommPowerState.Sleep # in mJ
 			#if (minCommEnergyExpense == -1) or (CommEnergyExpense < minCommEnergyExpense):
 			#	minCommEnergyExpense = minCommEnergyExpense
 			#	bestCommProtocol = CommProtocol.TechnoName
-		#return minCommEnergyExpense
+		return retList

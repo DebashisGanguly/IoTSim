@@ -44,16 +44,24 @@ if __name__ == "__main__" :
 		sensorPeriods[sensor] = int(device.Sensors[sensor].SensingPeriod/granularity)
 	
 	tcur=min(netTime,sensTime)
-	
+	lastBusyTime = 0
+	prevTime = tcur
 	eventList=[]
 	missed = 0
+	consumedEnergy = 0
+
 	while netLine or sensLine:
 		for sensor in device.Sensors:
 			sensorTicks[sensor] = sensorTicks[sensor] + 1
 			if sensorTicks[sensor] == sensorPeriods[sensor]:
 				sensorTicks[sensor] = 0
 				if curWorkFlow.SensorId == sensor:
-					#calculate workflow energy
+					energyAndTime = device.calcConsumedEnergy(curWorkFlow, protocolPDRs[curWorkFlow.ProtocolId])
+					consumedEnergy = consumedEnergy + energyAndTime[0]
+					if tcur > prevTime:
+						consumedEnergy = consumedEnergy + (tcur - prevTime - lastBusyTime) * device.CommPowerState.Sleep / 1000
+					prevTime = tcur
+					lastBusyTime = energyAndTime[1]
 					if sensLine and tcur > int(senseTags[1]):
 						sensLine = sensTraceFile.readline()
 						if sensLine:
