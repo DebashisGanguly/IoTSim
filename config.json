@@ -1,41 +1,39 @@
 {
   "Config": {
     "PowerConsumption": {
-      "HWName": "nRF51822",
-      "Rx": "42.3",
-      "Tx": "37.2",
-      "CPUIdle": "13.2",
-      "CPUActive": "20",
-      "Sleep": "0.0078"
+      "HWName": "DART6UL",
+      "CPUIdle": "14.85",
+      "CPUActive": "429",
+      "Sleep": "0.36"
     },
     "Sensing": {
       "Sensor": [
         {
           "Id": "1",
           "Name": "PIR",
-          "SensingPeriod": "1",
-          "DataRate": "1",
-          "AcquireTime": "1",
-          "StaticPower": "1",
-          "DynamicPower": "1"
+          "SensingPeriod": "300",
+          "DataRate": "9e8",
+          "AcquireTime": "0.88e-8",
+          "StaticPower": "0.33",
+          "DynamicPower": "0"
         },
         {
           "Id": "2",
           "Name": "Cam_SetPoint1",
-          "SensingPeriod": "1",
-          "DataRate": "1",
-          "AcquireTime": "1",
-          "StaticPower": "1",
-          "DynamicPower": "1"
+          "SensingPeriod": "150",
+          "DataRate": "96e6",
+          "AcquireTime": "71.66",
+          "StaticPower": "0",
+          "DynamicPower": "381"
         },
         {
           "Id": "3",
           "Name": "Cam_SetPoint2",
-          "SensingPeriod": "1",
-          "DataRate": "1",
-          "AcquireTime": "1",
-          "StaticPower": "1",
-          "DynamicPower": "1"
+          "SensingPeriod": "150",
+          "DataRate": "96e6",
+          "AcquireTime": "17.915",
+          "StaticPower": "0",
+          "DynamicPower": "262"
         }
       ]
     },
@@ -43,23 +41,33 @@
       "ProcAlgo": [
         {
           "Id": "1",
-          "Name": "FFT",
-          "ProcTimePerBit": "1"
+          "Name": "Identity",
+          "ProcTimePerBit": "0",
+          "CompressionRatio":"1.0"
         },
         {
           "Id": "2",
           "Name": "Aggregate",
-          "ProcTimePerBit": "1"
+          "ProcTimePerBit": "0.11e-9",
+          "CompressionRatio":"0.0"
         },
         {
           "Id": "3",
           "Name": "VideoProcessing",
-          "ProcTimePerBit": "1"
+          "ProcTimePerBit": "1.1e-8",
+          "CompressionRatio":"0.0"
         },
         {
           "Id": "4",
           "Name": "VideoCompression",
-          "ProcTimePerBit": "1"
+          "ProcTimePerBit": "0.11e-9",
+          "CompressionRatio":"0.25"
+        },
+        {
+          "Id": "5",
+          "Name": "VideoFFT",
+          "ProcTimePerBit": "0.11e-8",
+          "CompressionRatio":"0.1"
         }
       ]
     },
@@ -68,6 +76,8 @@
         {
           "Id": "1",
           "Name": "BLE5.0",
+          "Rx": "72.6",
+          "Tx": "112.2",
           "MaxPacketSize": "245",
           "PHYRate": "1",
           "PHYOverhead": "64",
@@ -84,6 +94,8 @@
         {
           "Id": "2",
           "Name": "802.11ah9_16",
+          "Rx": "231",
+          "Tx": "610.5",
           "MaxPacketSize": "1280",
           "PHYRate": "78.0",
           "PHYOverhead": "240",
@@ -118,25 +130,103 @@
           "Id": "1",
           "SensorId": "1",
           "ProcAlgoId": "1",
-          "ProtocolId": "None"
+          "ProtocolId": "1"
         },
         {
           "Id": "2",
           "SensorId": "1",
-          "ProcAlgoId": "2",
-          "ProtocolId": "Any"
+          "ProcAlgoId": "1",
+          "ProtocolId": "2"
         },
         {
           "Id": "3",
+          "SensorId": "1",
+          "ProcAlgoId": "2",
+          "ProtocolId": "None"
+        },
+        {
+          "Id": "4",
           "SensorId": "2",
           "ProcAlgoId": "3",
           "ProtocolId": "None"
         },
         {
-          "Id": "4",
+          "Id": "5",
+          "SensorId": "2",
+          "ProcAlgoId": "4",
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "6",
+          "SensorId": "2",
+          "ProcAlgoId": "4",
+          "ProtocolId": "2"
+        },
+        {
+          "Id": "7",
+          "SensorId": "2",
+          "ProcAlgoId": "5",
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "8",
+          "SensorId": "2",
+          "ProcAlgoId": "5",
+          "ProtocolId": "2"
+        },
+        {
+          "Id": "9",
+          "SensorId": "2",
+          "ProcAlgoId": "1",
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "10",
+          "SensorId": "2",
+          "ProcAlgoId": "1",
+          "ProtocolId": "2"
+        },
+        {
+          "Id": "11",
+          "SensorId": "3",
+          "ProcAlgoId": "3",
+          "ProtocolId": "None"
+        },
+        {
+          "Id": "12",
           "SensorId": "3",
           "ProcAlgoId": "4",
-          "ProtocolId": "Any"
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "13",
+          "SensorId": "3",
+          "ProcAlgoId": "4",
+          "ProtocolId": "2"
+        },
+        {
+          "Id": "14",
+          "SensorId": "3",
+          "ProcAlgoId": "5",
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "15",
+          "SensorId": "3",
+          "ProcAlgoId": "5",
+          "ProtocolId": "2"
+        },
+        {
+          "Id": "16",
+          "SensorId": "3",
+          "ProcAlgoId": "1",
+          "ProtocolId": "1"
+        },
+        {
+          "Id": "17",
+          "SensorId": "3",
+          "ProcAlgoId": "1",
+          "ProtocolId": "2"
         }
       ]
     },
@@ -151,55 +241,86 @@
               "Id": "1",
               "If": {
                 "EventType": "Sensing",
-                "CurId": "1",
+                "CurId": "1,2,3",
                 "Incident": "Motion"
               },
               "Then": {
                 "Action": "Switch",
-                "NewId": "2,3"
+                "NewId": "4,5,6,7,8,9,10,11,12,13,14,15,16,17"
               }
             },
             {
               "Id": "2",
               "If": {
                 "EventType": "Sensing",
-                "CurId": "1",
+                "CurId": "1,2,3",
                 "Incident": "Still"
               },
               "Then": {
                 "Action": "Nothing",
-                "NewId": "1"
+                "NewId": "1,2,3"
               }
             },
             {
               "Id": "3",
               "If": {
                 "EventType": "Sensing",
-                "CurId": "2,3",
+                "CurId": "4,5,6,7,8,9,10,11,12,13,14,15,16,17",
                 "Incident": "Still"
               },
               "Then": {
                 "Action": "Switch",
-                "NewId": "1"
+                "NewId": "1,2,3"
               }
             },
             {
               "Id": "4",
               "If": {
                 "EventType": "Sensing",
-                "CurId": "2,3",
+                "CurId": "4,5,6,7,8,9,10,11,12,13,14,15,16,17",
                 "Incident": "Motion"
               },
               "Then": {
                 "Action": "Nothing",
-                "NewId": "2,3"
+                "NewId": "4,5,6,7,8,9,10,11,12,13,14,15,16,17"
               }
             }
           ]
         },
         {
           "Id": "2",
-          "Name":"Basic",
+          "Name":"Basic - No Crticality",
+          "DefaultWorkFlowId": "1",
+          "Rule": [
+            {
+              "Id": "1",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1,2,3",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Switch",
+                "NewId": "1,2,3"
+              }
+            },
+            {
+              "Id": "2",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "1,2,3",
+                "Incident": "Still"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "1,2,3"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "3",
+          "Name":"Non-Context Aware: BLE",
           "DefaultWorkFlowId": "1",
           "Rule": [
             {
@@ -211,7 +332,7 @@
               },
               "Then": {
                 "Action": "Switch",
-                "NewId": "2,3"
+                "NewId": "5,7,9,12,14,16"
               }
             },
             {
@@ -230,24 +351,24 @@
               "Id": "3",
               "If": {
                 "EventType": "Sensing",
-                "CurId": "2,3",
+                "CurId": "5,7,9,12,14,16",
+                "Incident": "Motion"
+              },
+              "Then": {
+                "Action": "Nothing",
+                "NewId": "5,7,9,12,14,16"
+              }
+            },
+            {
+              "Id": "2",
+              "If": {
+                "EventType": "Sensing",
+                "CurId": "5,7,9,12,14,16",
                 "Incident": "Still"
               },
               "Then": {
                 "Action": "Switch",
                 "NewId": "1"
-              }
-            },
-            {
-              "Id": "4",
-              "If": {
-                "EventType": "Sensing",
-                "CurId": "2,3",
-                "Incident": "Motion"
-              },
-              "Then": {
-                "Action": "Nothing",
-                "NewId": "2,3"
               }
             }
           ]

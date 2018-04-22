@@ -3,6 +3,7 @@ from Device import Device
 from Event import Event
 from Workflow import Workflow
 from Scheme import Scheme
+import math
 
 if __name__ == "__main__" :
 	if (len(sys.argv) != 4) :
@@ -26,6 +27,7 @@ if __name__ == "__main__" :
 	senseTags = sensLine.split(' ')
 	sensTime = int(senseTags[0])
 	protocolPDRs = {}
+	protocolPDRs[0] = 0.0 #For the 'None' protocol
 	if netTime < sensTime:
 		tcur = netTime
 		for protocolId in device.Protocols:
@@ -42,8 +44,10 @@ if __name__ == "__main__" :
 		sensorTicks[sensor] = 0
 		if device.Sensors[sensor].SensingPeriod < granularity:
 			granularity = device.Sensors[sensor].SensingPeriod
+	#print("Granularity: " + str(granularity) + "\n")
 	for sensor in device.Sensors:
 		sensorPeriods[sensor] = int(device.Sensors[sensor].SensingPeriod/granularity)
+		#print("Sensor: " + str(sensor) + ", Ticks: " + str(sensorPeriods[sensor]) + "\n")
 	
 	tcur=min(netTime,sensTime)
 	curWorkFlows = {}
@@ -69,9 +73,10 @@ if __name__ == "__main__" :
 			if sensorTicks[sensor] == sensorPeriods[sensor]:
 				sensorTicks[sensor] = 0
 				for SchemeId in device.Schemes:
-					if curWorkFlows[SchemeId].SensorId == sensor:
-						energyAndTime = device.calcConsumedEnergy(curWorkFlows[SchemeId], protocolPDRs[curWorkFlows[SchemeId].ProtocolId])
-						consumedEnergy = consumedEnergy[SchemeId] + energyAndTime[0]
+					#print("Workflow sensor: " + curWorkFlows[SchemeId].SensorId + ", Current sensor: " + str(sensor) + "\n")
+					if int(curWorkFlows[SchemeId].SensorId) == sensor:
+						energyAndTime = device.calcConsumedEnergy(curWorkFlows[SchemeId], protocolPDRs[int(curWorkFlows[SchemeId].ProtocolId)])
+						consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0]
 						if tcur > prevTimes[SchemeId]:
 							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.CommPowerState.Sleep / 1000
 						prevTimes[SchemeId] = tcur
@@ -87,28 +92,32 @@ if __name__ == "__main__" :
 						for SchemeId in device.Schemes:
 							nextWorkFlowId = curWorkFlowIds[SchemeId]
 							for rule in device.Schemes[SchemeId].Rules:
+								#print(curWorkFlowIds[SchemeId] + "\n")
 								if curWorkFlowIds[SchemeId] in rule.CurrentId and rule.Incident == 'Motion':
+									#print("Motion: Rule match.\n")
 									potentialWorkflowIds = rule.NewId
 									minWorkflowEnergy = math.inf
 									for potentialWorkflowId in potentialWorkflowIds:
-										energyAndTime = device.calcConsumedEnergy(device.Workflows[potentialWorkflowId], protocolPDRs[device.WorkFlows[int(potentialWorkflowId)].ProtocolId])
+										energyAndTime = device.calcConsumedEnergy(device.Workflows[potentialWorkflowId], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
 										if ((energyAndTime[0] + device.CommPowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
 											nextWorkFlowId = potentialWorkflowId
 							curWorkFlowIds[SchemeId] = nextWorkFlowId
 							curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
-							if sensLine and tcur >= int(senseTags[0]) and tcur <= int(senseTags[1]) and int(senseTags[2]) == 1:
-								if int(curWorkFlows[SchemeId].SensorId) == 1:
+							#if sensLine and tcur >= int(senseTags[0]) and tcur <= int(senseTags[1]) and int(senseTags[2]) == 1:
+							if int(curWorkFlows[SchemeId].SensorId) == 1:
 									critFails[SchemeId] = critFails[SchemeId] + 1
 						#use rules with incident motion to change workflow
 					else:
 						for SchemeId in device.Schemes:
 							nextWorkFlowId = curWorkFlowIds[SchemeId]
 							for rule in device.Schemes[SchemeId].Rules:
+								#print(curWorkFlowIds[SchemeId] + "\n")
 								if curWorkFlowIds[SchemeId] in rule.CurrentId and rule.Incident == 'Still':
+									#print("Still: Rule match.\n")
 									potentialWorkflowIds = rule.NewId
 									minWorkflowEnergy = math.inf
 									for potentialWorkflowId in potentialWorkflowIds:
-										energyAndTime = device.calcConsumedEnergy(device.Workflows[int(potentialWorkflowId)], protocolPDRs[device.WorkFlows[int(potentialWorkflowId)].ProtocolId])
+										energyAndTime = device.calcConsumedEnergy(device.Workflows[int(potentialWorkflowId)], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
 										if ((energyAndTime[0] + device.CommPowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
 											nextWorkFlowId = potentialWorkflowId
 							curWorkFlowIds[SchemeId] = nextWorkFlowId
@@ -123,7 +132,10 @@ if __name__ == "__main__" :
 				netTags = netLine.split(' ')		
 				netTime = int(netTags[0])
 				
-				
-	print(str(device))
+	for SchemeId in device.Schemes:
+		print("Scheme: " + device.Schemes[SchemeId].Name + "\n")
+		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " mW\n")
+		print("\tNumber of Criticality fails: " + str(critFails[SchemeId]) + " \n")
+	#print(str(device))
 
 

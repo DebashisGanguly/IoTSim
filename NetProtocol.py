@@ -5,6 +5,8 @@ class NetProtocol:
 	def __init__(self, **kwargs):
 		self.guardInterval = 0
 		self.TechnoName = kwargs.pop('TechnoName')
+		self.Rx = kwargs.pop('Rx')
+		self.Tx = kwargs.pop('Tx')
 		self.MaxPacketSize = kwargs.pop('MaxPacketSize')
 		self.PHYRate = kwargs.pop('PHYRate')
 		self.PHYOverhead = kwargs.pop('PHYOverhead')
@@ -20,6 +22,8 @@ class NetProtocol:
 	def __repr__(self):
 		string = "\n\n\t\tTechnology Details:\n"
 		string += "\n\t\t\tName = " + self.TechnoName
+		string += "\n\t\tRx = " + str(self.Rx) + " mW"
+		string += "\n\t\tTx = " + str(self.Tx) + " mW"
 		string += "\n\t\t\tMax Packet Size = " + str(self.MaxPacketSize) + " bytes"
 		string += "\n\t\t\tPHY Rate = " + str(self.PHYRate) + " mbps"
 		string += "\n\t\t\tPHY Overhead = " + str(self.PHYOverhead) + " us"

@@ -54,13 +54,11 @@ class Device:
 		powerConsumptionItem = configItems['PowerConsumption']
 
 		HWName = powerConsumptionItem['HWName']
-		Rx = float(powerConsumptionItem['Rx'])
-		Tx = float(powerConsumptionItem['Tx'])
 		CPUIdle = float(powerConsumptionItem['CPUIdle'])
 		CPUActive = float(powerConsumptionItem['CPUActive'])
 		Sleep = float(powerConsumptionItem['Sleep'])
 
-		self.CommPowerState = CommPowerState(HWName, Rx, Tx, CPUIdle, CPUActive, Sleep)
+		self.CommPowerState = CommPowerState(HWName, CPUIdle, CPUActive, Sleep)
 
 		sensingItem = configItems['Sensing']
 
@@ -86,8 +84,8 @@ class Device:
 			ProcAlgoId = int(procAlgoItem['Id'])
 			ProcAlgoName = procAlgoItem['Name']
 			ProcTimePerBit = float(procAlgoItem['ProcTimePerBit'])
-
-			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit)
+			CompressionRatio = float(procAlgoItem['CompressionRatio'])
+			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit, CompressionRatio)
 			self.ProcAlgos[ProcAlgoId] = ProcAlgoObj
 
 		networkingItem = configItems['Networking']
@@ -97,6 +95,8 @@ class Device:
 		for protocolItem in networkingItem['Protocol']:
 			ProtocolId = int(protocolItem['Id'])
 			ProtocolName = protocolItem['Name']
+			Rx = float(protocolItem['Rx'])
+			Tx = float(protocolItem['Tx'])
 			MaxPacketSize = float(protocolItem['MaxPacketSize'])
 			PHYRate = float(protocolItem['PHYRate'])
 			PHYOverhead = float(protocolItem['PHYOverhead'])
@@ -107,7 +107,7 @@ class Device:
 			PacketDeliveryRatio = float(protocolItem['PacketDeliveryRatio'])
 			ProtocolSpecificParam = protocolItem['ProtocolSpecificParam']
 
-			NetProtocolObj = NetProtocolFactory.getNetProtocol(ProtocolName, TechnoName = ProtocolName, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, ProtocolSpecificParam = ProtocolSpecificParam)
+			NetProtocolObj = NetProtocolFactory.getNetProtocol(ProtocolName, TechnoName = ProtocolName, Rx = Rx, Tx = Tx, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, ProtocolSpecificParam = ProtocolSpecificParam)
 			self.Protocols[ProtocolId] = NetProtocolObj
 
 		contextItem = configItems['Context']
@@ -122,21 +122,21 @@ class Device:
 			elif workflowItem['SensorId'] == 'Any':
 				SensorId = -1
 			else:
-				SensorId = workflowItem['SensorId']
+				SensorId = int(workflowItem['SensorId'])
 
 			if workflowItem['ProcAlgoId'] == 'None':
 				ProcAlgoId = 0
 			elif workflowItem['ProcAlgoId'] == 'Any':
 				ProcAlgoId = -1
 			else:	
-				ProcAlgoId = workflowItem['ProcAlgoId']
+				ProcAlgoId = int(workflowItem['ProcAlgoId'])
 
 			if workflowItem['ProtocolId'] == 'None':
 				ProtocolId = 0
 			elif workflowItem['ProtocolId'] == 'Any':
 				ProtocolId = -1
 			else:
-				ProtocolId = workflowItem['ProtocolId']
+				ProtocolId = int(workflowItem['ProtocolId'])
 
 			WorkflowObj = Workflow(SensorId, ProcAlgoId, ProtocolId)
 			self.Workflows[WorkflowId] = WorkflowObj
@@ -161,7 +161,7 @@ class Device:
 
 				RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
 				rules.append(RuleObj)
-			SchemeObj = Scheme(scheme['Name'], rules, scheme['DefaultWorkFlowId'])
+			SchemeObj = Scheme(scheme['Name'], rules, int(scheme['DefaultWorkFlowId']))
 			self.Schemes[SchemeId] = SchemeObj
 
 #		self.Rules = {}
@@ -183,23 +183,24 @@ class Device:
 
 	def calcConsumedEnergy(self, workflow, pdr):
 		#minCommEnergyExpense = -1
-		ProtocolId = workflow['ProtocolId']
-		SensorId = workflow['SensorId']
-		ProcAlgoId = workflow['ProcAlgoId']
+		ProtocolId = int(workflow.ProtocolId)
+		SensorId = int(workflow.SensorId)
+		ProcAlgoId = int(workflow.ProcAlgoId)
 		sensor = self.Sensors[SensorId]
 		procAlgo = self.ProcAlgos[ProcAlgoId]
 		ApplicationDataSize = sensor.AcquireTime * sensor.DataRate / (8 * 1000)
-		procTime = 8 * ApplicationDataSize / procAlgo.ProcTimePerBit
+		procTime = 8 * ApplicationDataSize * procAlgo.ProcTimePerBit
+		dataToSend = procAlgo.CompressionRatio * ApplicationDataSize
 		CommEnergyExpense = 0
 		busyTime = procTime + sensor.AcquireTime
 		sleepTime = sensor.SensingPeriod - busyTime
-		if ProtocolId != 0 or ProtocolId != -1:
+		if ProtocolId != 0 and ProtocolId != -1:
 			CommProtocol = self.Protocols[ProtocolId]
 			CommProtocol.PacketDeliveryRatio = 100 * pdr
 		#for CommProtocol in self.CommProtocolList:
-			protocolTimings = CommProtocol.detProtocolTimings(float(ApplicationDataSize * 8), sensor.SensingPeriod)
-			CommEnergyExpense =   protocolTimings['timeTxMode']    * self.CommPowerState.Tx \
-								+ protocolTimings['timeRxMode']    * self.CommPowerState.Rx \
+			protocolTimings = CommProtocol.detProtocolTimings(float(dataToSend * 8), sensor.SensingPeriod)
+			CommEnergyExpense =   protocolTimings['timeTxMode']    * CommProtocol.Tx \
+								+ protocolTimings['timeRxMode']    * CommProtocol.Rx \
 								+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle
 			sleepTime = protocolTimings['timeSleepMode'] - busyTime
 			busyTime = busyTime + (protocolTimings['timeTxMode'] + protocolTimings['timeRxMode'] + protocolTimings['timeIdleMode']) / 1000
