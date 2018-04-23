@@ -13,7 +13,7 @@
           "Name": "PIR",
           "SensingPeriod": "300",
           "DataRate": "9e8",
-          "AcquireTime": "0.88e-8",
+          "AcquireTime": "0.88e-5",
           "StaticPower": "0.33",
           "DynamicPower": "0"
         },
