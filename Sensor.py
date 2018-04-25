@@ -1,11 +1,13 @@
 class Sensor:
-	def __init__(self, Name, SensingPeriod, DataRate, AcquireTime, StaticPower, DynamicPower):
+	def __init__(self, Name, SensingPeriod, DataRate, AcquireTime, StaticPower, DynamicPower, Criticality):
 		self.Name = Name
 		self.SensingPeriod = SensingPeriod
 		self.DataRate = DataRate
 		self.AcquireTime = AcquireTime
 		self.StaticPower = StaticPower
 		self.DynamicPower = DynamicPower
+		self.Criticality = Criticality
+
 
 	def __repr__(self):
 		string = '\n\t\tSensor:'
@@ -15,4 +17,5 @@ class Sensor:
 		string += '\n\t\t\tAcquire Time = ' + str(self.AcquireTime) + ' ms'
 		string += '\n\t\t\tStatic Power = ' + str(self.StaticPower) + ' mW'
 		string += '\n\t\t\tDynamic Power = ' + str(self.DynamicPower) + ' mW'
+		string += '\n\t\t\tCriticality score = ' + str(self.Criticality)
 		return string

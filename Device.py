@@ -72,8 +72,9 @@ class Device:
 			AcquireTime = float(sensorItem['AcquireTime'])
 			StaticPower = float(sensorItem['StaticPower'])
 			DynamicPower = float(sensorItem['DynamicPower'])
+			Criticality = float(sensorItem['Criticality'])
 
-			SensorObj = Sensor(SensorName, SensingPeriod, DataRate, AcquireTime, StaticPower, DynamicPower)
+			SensorObj = Sensor(SensorName, SensingPeriod, DataRate, AcquireTime, StaticPower, DynamicPower, Criticality)
 			self.Sensors[SensorId] = SensorObj
 
 		processingItem = configItems['Processing']
@@ -85,7 +86,8 @@ class Device:
 			ProcAlgoName = procAlgoItem['Name']
 			ProcTimePerBit = float(procAlgoItem['ProcTimePerBit'])
 			CompressionRatio = float(procAlgoItem['CompressionRatio'])
-			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit, CompressionRatio)
+			Criticality = float(procAlgoItem['Criticality'])
+			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit, CompressionRatio, Criticality)
 			self.ProcAlgos[ProcAlgoId] = ProcAlgoObj
 
 		networkingItem = configItems['Networking']

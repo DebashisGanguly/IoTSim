@@ -5,6 +5,8 @@ from Workflow import Workflow
 from Scheme import Scheme
 import math
 import json
+import plotly
+#import plotly.graph_objs as go
 
 if __name__ == "__main__" :
 	if (len(sys.argv) != 4) :
@@ -51,7 +53,7 @@ if __name__ == "__main__" :
 	curWorkFlowIds = {}
 	lastBusyTimes = {}
 	prevTimes = {}
-	critFails = {}
+	critScore = {}
 	consumedEnergy = {}
 	schemeEnergies = {}
 	
@@ -68,7 +70,7 @@ if __name__ == "__main__" :
 		lastBusyTimes[SchemeId] = 0
 		prevTimes[SchemeId] = tcur
 		consumedEnergy[SchemeId] = 0
-		critFails[SchemeId] = 0
+		critScore[SchemeId] = 0.0
 		schemeEnergies[SchemeId] = {}
 		schemeEnergies[SchemeId]['x'] = []
 		schemeEnergies[SchemeId]['y'] = []
@@ -76,7 +78,7 @@ if __name__ == "__main__" :
 		schemeEnergies[SchemeId]['name'] = device.Schemes[SchemeId].Name
 		schemeEnergies[SchemeId]['mode'] = 'markers+lines'
 	missed = 0
-
+	count = 0
 	while netLine or sensLine:
 		for sensor in device.Sensors:
 			sensorTicks[sensor] = sensorTicks[sensor] + 1
@@ -115,8 +117,10 @@ if __name__ == "__main__" :
 											nextWorkFlowId = potentialWorkflowId
 							curWorkFlowIds[SchemeId] = nextWorkFlowId
 							curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
-							if int(curWorkFlows[SchemeId].SensorId) == 1:
-									critFails[SchemeId] = critFails[SchemeId] + 1
+							#if int(curWorkFlows[SchemeId].SensorId) == 1:
+							schemeSensor = device.Sensors[curWorkFlows[SchemeId].SensorId]
+							schemeProcAlgo = device.ProcAlgos[curWorkFlows[SchemeId].ProcAlgoId]
+							critScore[SchemeId] = critScore[SchemeId] + schemeSensor.Criticality * schemeProcAlgo.Criticality * int(senseTags[2])
 						#use rules with incident motion to change workflow
 					else:
 						sensor1['x'].append(tcur)
@@ -135,6 +139,9 @@ if __name__ == "__main__" :
 							curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
 						#use rules with incident still to change workflow
 		tcur = tcur + granularity
+		count = count + 1
+		if count%5000 == 0:
+			print(str(tcur) + "\n")
 		while tcur > netTime and netLine:
 			for protocolId in device.Protocols:
 				protocolPDRs[protocolId] = float(netTags[int(protocolId)])
@@ -155,18 +162,32 @@ if __name__ == "__main__" :
 	totalEnergies['data'][0]['type'] = 'bar'
 	totalEnergies['layout'] = {'title': 'Total Consumed Energy', 'xaxis': {'title': 'Schemes'}, 'yaxis': {'title': 'Energy (mJ)'}}
 	
+	criticalities = {}
+	criticalities['data'] = []
+	criticalities['data'].append({})
+	criticalities['data'][0]['x'] = []
+	criticalities['data'][0]['y'] = []
+	criticalities['data'][0]['type'] = 'bar'
+	criticalities['layout'] = {'title': 'Criticality Score', 'xaxis': {'title': 'Schemes'}}
+	
 	for SchemeId in device.Schemes:
 		energies['data'].append(schemeEnergies[SchemeId])
 		totalEnergies['data'][0]['x'].append(device.Schemes[SchemeId].Name)
 		totalEnergies['data'][0]['y'].append(consumedEnergy[SchemeId])
+		criticalities['data'][0]['x'].append(device.Schemes[SchemeId].Name)
+		criticalities['data'][0]['y'].append(critScore[SchemeId])
 		print("Scheme: " + device.Schemes[SchemeId].Name + "\n")
 		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " mW\n")
-		print("\tNumber of Criticality fails: " + str(critFails[SchemeId]) + " \n")
+		print("\Criticality score: " + str(critScore[SchemeId]) + " \n")
 	
 	energies['data'].append(sensor1)
 
 	with open('plot_energies.json', 'w') as fp:
 		json.dump(energies, fp)
-	
+	plotly.offline.plot(energies)
 	with open('plot_totalEnergies.json', 'w') as fp:
 		json.dump(totalEnergies, fp)
+	plotly.offline.plot(totalEnergies)
+	with open('plot_criticalities.json', 'w') as fp:
+		json.dump(criticalities, fp)
+	plotly.offline.plot(criticalities)
