@@ -59,7 +59,7 @@
         {
           "Id": "3",
           "Name": "VideoProcessing",
-          "ProcTimePerBit": "1.1e-8",
+          "ProcTimePerBit": "3.3e-5",
           "CompressionRatio":"0.0",
 	  "Accuracy": "0.9"
         },
@@ -75,7 +75,7 @@
           "Name": "VideoFFT",
           "ProcTimePerBit": "0.11e-8",
           "CompressionRatio":"0.1",
-	  "Accuracy": "0.7"
+	  "Accuracy": "0.8"
         }
       ]
     },

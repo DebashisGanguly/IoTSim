@@ -191,11 +191,18 @@ class Device:
 			CommEnergyExpense =   protocolTimings['timeTxMode']    * CommProtocol.Tx \
 								+ protocolTimings['timeRxMode']    * CommProtocol.Rx \
 								+ protocolTimings['timeIdleMode']  * self.PowerState.CPUIdle
-			sleepTime = protocolTimings['timeSleepMode'] - busyTime
-			busyTime = busyTime + (protocolTimings['timeTxMode'] + protocolTimings['timeRxMode'] + protocolTimings['timeIdleMode']) / 1000
+			if CommEnergyExpense < 0:
+				CommEnergyExpense = float("inf")
+				#print('Negative energy.\n')
+				#print('Datasize: ' + str(dataToSend) + ', Period: ' + str(sensor.SensingPeriod) + ', PDR: ' + str(pdr) + '\n')
+				#print('Tx time: ' + str(protocolTimings['timeTxMode']) + ', Rx time: ' + str(protocolTimings['timeRxMode']) + ', Idle time: ' + str(protocolTimings['timeIdleMode']) + '\n')
+				#print('Protocol: ' + CommProtocol.TechnoName + ', Sensor: ' + sensor.Name + ', ProcAlgo: ' + procAlgo.Name + '\n')
+			else:
+				sleepTime = protocolTimings['timeSleepMode'] * 1000 - busyTime
+				busyTime = busyTime + (protocolTimings['timeTxMode'] + protocolTimings['timeRxMode'] + protocolTimings['timeIdleMode']) * 1000
 		if busyTime > sensor.SensingPeriod:
-			print('Cannot perform all operations (sensing, processing and comm) within sensing period. Setting energy consumption to max value.\n')
-			print('Protocol: ' + CommProtocol.TechnoName + ', Sensor: ' + sensor.Name + ', ProcAlgo: ' + procAlgo.Name + '\n')
+			#print('Cannot perform all operations (sensing, processing and comm) within sensing period. Setting energy consumption to max value.\n')
+			#print('Protocol: ' + str(ProtocolId) + ', Sensor: ' + sensor.Name + ', ProcAlgo: ' + procAlgo.Name + '\n')
 			CommEnergyExpense = math.inf
 		else:
 			CommEnergyExpense = CommEnergyExpense + \

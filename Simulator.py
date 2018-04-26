@@ -87,16 +87,21 @@ if __name__ == "__main__" :
 						energyAndTime = device.calcConsumedEnergy(curWorkFlows[SchemeId], protocolPDRs[int(curWorkFlows[SchemeId].ProtocolId)])
 						curEnergy = consumedEnergy[SchemeId]
 						if energyAndTime[0] == float("inf"):
-							print("Scheme: " + device.Schemes[SchemeId].Name + " with protocol: " + device.Protocols[device.Workflows[curWorkFlowIds[SchemeId]].ProtocolId].TechnoName + " has PDR = 0. No communication will take place. May miss critical information.")
+							#print("Scheme: " + device.Schemes[SchemeId].Name + " with protocol: " + device.Protocols[device.Workflows[curWorkFlowIds[SchemeId]].ProtocolId].TechnoName + " has PDR = 0. No communication will take place. May miss critical information.")
 							schemeSensor = device.Sensors[curWorkFlows[SchemeId].SensorId]
 							schemeProcAlgo = device.ProcAlgos[curWorkFlows[SchemeId].ProcAlgoId]
 							critScore[SchemeId] = critScore[SchemeId] - schemeSensor.Criticality * schemeProcAlgo.Accuracy * int(senseTags[2])
 							#consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + 1000000000
+						elif energyAndTime[0] < 0:
+							print("Warning: Scheme: " + device.Schemes[SchemeId].Name + " with protocol: " + device.Protocols[device.Workflows[curWorkFlowIds[SchemeId]].ProtocolId].TechnoName + " produced negative energy!")
 						else:
-							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0]
+							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0] / 1000
 						if tcur > prevTimes[SchemeId]:
-							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.PowerState.Sleep / 1000
+							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.PowerState.Sleep / 1000000
 						schemeEnergies[SchemeId]['x'].append(tcur)
+						#if SchemeId == '1' or SchemeId == '6':
+						#	print("Scheme: " + device.Schemes[SchemeId].Name + " consumed " + str(energyAndTime[0]) + " busy energy and " + str(consumedEnergy[SchemeId] - curEnergy) + " total energy actually.")
+						#	print("Actual sleep time: " + str(tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]))
 						schemeEnergies[SchemeId]['y'].append(consumedEnergy[SchemeId] - curEnergy)
 						prevTimes[SchemeId] = tcur
 						lastBusyTimes[SchemeId] = energyAndTime[1]
@@ -129,7 +134,9 @@ if __name__ == "__main__" :
 							minWorkflowEnergy = float("inf")
 							for potentialWorkflowId in potentialWorkflowIds:
 								energyAndTime = device.calcConsumedEnergy(device.Workflows[potentialWorkflowId], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
-								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
+								potSensor = device.Sensors[device.Workflows[int(potentialWorkflowId)].SensorId]
+								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / potSensor.SensingPeriod) < minWorkflowEnergy:
+									minWorkflowEnergy = ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / potSensor.SensingPeriod)
 									nextWorkFlowId = potentialWorkflowId
 					curWorkFlowIds[SchemeId] = nextWorkFlowId
 					curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
@@ -146,10 +153,17 @@ if __name__ == "__main__" :
 					for rule in device.Schemes[SchemeId].Rules:
 						if curWorkFlowIds[SchemeId] in rule.CurrentId and rule.Incident == 'Still':
 							potentialWorkflowIds = rule.NewId
+							#if SchemeId == '1' or SchemeId == '6':
+							#	print("Scheme: " + device.Schemes[SchemeId].Name + ", Potential Workflows: " + str(potentialWorkflowIds))
 							minWorkflowEnergy = float("inf")
 							for potentialWorkflowId in potentialWorkflowIds:
 								energyAndTime = device.calcConsumedEnergy(device.Workflows[int(potentialWorkflowId)], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
-								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
+								potSensor = device.Sensors[device.Workflows[int(potentialWorkflowId)].SensorId]
+								#if SchemeId == '1' or SchemeId == '6':
+								#	print("Workflow: " + str(potentialWorkflowId) + " will consume " + str(energyAndTime[0]) + " busy energy and " + str(energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) + " total energy.")
+								#	print("Calculated sleep time: " + str(energyAndTime[2]) + ", calculated busy time: " + str(energyAndTime[1]) + ", period: " + str(potSensor.SensingPeriod))
+								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / potSensor.SensingPeriod) < minWorkflowEnergy:
+									minWorkflowEnergy = ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / potSensor.SensingPeriod)
 									nextWorkFlowId = potentialWorkflowId
 					curWorkFlowIds[SchemeId] = nextWorkFlowId
 					curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
@@ -158,7 +172,7 @@ if __name__ == "__main__" :
 				
 	energies = {}
 	energies['data'] = []
-	energies['layout'] = {'title': 'Energy consumed versus time', 'xaxis': {'title': 'Time'}, 'yaxis': {'title': 'Energy (mJ)'}}
+	energies['layout'] = {'title': 'Energy consumed versus time', 'xaxis': {'title': 'Time'}, 'yaxis': {'title': 'Energy (J)'}}
 	
 	totalEnergies = {}
 	totalEnergies['data'] = []
@@ -166,7 +180,7 @@ if __name__ == "__main__" :
 	totalEnergies['data'][0]['x'] = []
 	totalEnergies['data'][0]['y'] = []
 	totalEnergies['data'][0]['type'] = 'bar'
-	totalEnergies['layout'] = {'title': 'Total Consumed Energy', 'xaxis': {'title': 'Schemes'}, 'yaxis': {'title': 'Energy (mJ)'}}
+	totalEnergies['layout'] = {'title': 'Total Consumed Energy', 'xaxis': {'title': 'Schemes'}, 'yaxis': {'title': 'Energy (J)'}}
 	
 	criticalities = {}
 	criticalities['data'] = []
@@ -183,17 +197,17 @@ if __name__ == "__main__" :
 		criticalities['data'][0]['x'].append(device.Schemes[SchemeId].Name)
 		criticalities['data'][0]['y'].append(critScore[SchemeId])
 		print("Scheme: " + device.Schemes[SchemeId].Name + "\n")
-		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " mW\n")
+		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " J\n")
 		print("\tCriticality score: " + str(critScore[SchemeId]) + " \n")
 	
 	energies['data'].append(sensor1)
 
-	with open('plot_energies.json', 'w') as fp:
+	with open('plot_energies_med2.json', 'w') as fp:
 		json.dump(energies, fp)
-	plotly.offline.plot(energies)
-	with open('plot_totalEnergies.json', 'w') as fp:
+	plotly.offline.plot(energies, filename = 'energies_med2.html')
+	with open('plot_totalEnergies_med2.json', 'w') as fp:
 		json.dump(totalEnergies, fp)
-	plotly.offline.plot(totalEnergies)
-	with open('plot_criticalities.json', 'w') as fp:
+	plotly.offline.plot(totalEnergies, filename = 'totalEnergies_med2.html')
+	with open('plot_criticalities_med2.json', 'w') as fp:
 		json.dump(criticalities, fp)
-	plotly.offline.plot(criticalities)
+	plotly.offline.plot(criticalities, filename = 'criticalities_med2.html')
