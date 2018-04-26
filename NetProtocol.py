@@ -1,5 +1,4 @@
 from fuzzymath import *
-from CommPowerState import CommPowerState
 
 class NetProtocol:
 	def __init__(self, **kwargs):

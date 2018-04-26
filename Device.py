@@ -1,4 +1,4 @@
-from CommPowerState import CommPowerState
+from PowerState import PowerState
 from Sensor import Sensor
 from ProcAlgo import ProcAlgo
 from NetProtocol import NetProtocol
@@ -13,7 +13,7 @@ class Device:
 	def __repr__(self):
 		string = "\nConfiguration Items:"
 
-		string += str(self.CommPowerState)
+		string += str(self.PowerState)
 
 		string += "\n\n\tSensors:\n"
 
@@ -39,8 +39,6 @@ class Device:
 
 		for SchemeId in self.Schemes:
 			string += str(self.Schemes[SchemeId])
-#		for RuleVal in self.Rules.values():
-#			string += str(RuleVal)
 
 		return string
 
@@ -58,7 +56,7 @@ class Device:
 		CPUActive = float(powerConsumptionItem['CPUActive'])
 		Sleep = float(powerConsumptionItem['Sleep'])
 
-		self.CommPowerState = CommPowerState(HWName, CPUIdle, CPUActive, Sleep)
+		self.PowerState = PowerState(HWName, CPUIdle, CPUActive, Sleep)
 
 		sensingItem = configItems['Sensing']
 
@@ -166,23 +164,6 @@ class Device:
 			SchemeObj = Scheme(scheme['Name'], rules, int(scheme['DefaultWorkFlowId']))
 			self.Schemes[SchemeId] = SchemeObj
 
-#		self.Rules = {}
-#
-#		for ruleItem in IFTTTItem['Rule']:
-#			RuleId = int(ruleItem['Id'])
-#
-#			ifItem = ruleItem['If']
-#			EventType = ifItem['EventType']
-#			CurId = list(map(int, ifItem['CurId'].split(',')))
-#			Incident = ifItem['Incident']
-#
-#			thenItem = ruleItem['Then']
-#			Action = thenItem['Action']
-#			NewId = list(map(int, thenItem['NewId'].split(',')))
-#
-#			RuleObj = Rule(EventType, CurId, Incident, Action, NewId)
-#			self.Rules[RuleId] = RuleObj
-
 	def calcConsumedEnergy(self, workflow, pdr):
 		#minCommEnergyExpense = -1
 		retList = []
@@ -210,7 +191,7 @@ class Device:
 			protocolTimings = CommProtocol.detProtocolTimings(float(dataToSend * 8), sensor.SensingPeriod)
 			CommEnergyExpense =   protocolTimings['timeTxMode']    * CommProtocol.Tx \
 								+ protocolTimings['timeRxMode']    * CommProtocol.Rx \
-								+ protocolTimings['timeIdleMode']  * self.CommPowerState.CPUIdle
+								+ protocolTimings['timeIdleMode']  * self.PowerState.CPUIdle
 			sleepTime = protocolTimings['timeSleepMode'] - busyTime
 			busyTime = busyTime + (protocolTimings['timeTxMode'] + protocolTimings['timeRxMode'] + protocolTimings['timeIdleMode']) / 1000
 		if busyTime > sensor.SensingPeriod:
@@ -219,12 +200,9 @@ class Device:
 			CommEnergyExpense = math.inf
 		else:
 			CommEnergyExpense = CommEnergyExpense + \
-								((sensor.AcquireTime + procTime) * self.CommPowerState.CPUActive + sensor.AcquireTime * (sensor.StaticPower + sensor.DynamicPower)) / 1000
+								((sensor.AcquireTime + procTime) * self.PowerState.CPUActive + sensor.AcquireTime * (sensor.StaticPower + sensor.DynamicPower)) / 1000
 		retList.append(CommEnergyExpense)
 		retList.append(busyTime)
 		retList.append(sleepTime)
-			#					+  * self.CommPowerState.Sleep # in mJ
-			#if (minCommEnergyExpense == -1) or (CommEnergyExpense < minCommEnergyExpense):
-			#	minCommEnergyExpense = minCommEnergyExpense
-			#	bestCommProtocol = CommProtocol.TechnoName
-		return retList
+		
+                return retList

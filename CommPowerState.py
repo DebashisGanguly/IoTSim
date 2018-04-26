@@ -1,4 +1,4 @@
-class CommPowerState:
+class PowerState:
 	def __init__(self, HWName,CPUIdle, CPUActive, Sleep):
 		self.HWName = HWName
 		self.CPUIdle = CPUIdle

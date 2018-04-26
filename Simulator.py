@@ -1,12 +1,10 @@
 import sys
 from Device import Device
-from Event import Event
 from Workflow import Workflow
 from Scheme import Scheme
 import math
 import json
 import plotly
-#import plotly.graph_objs as go
 
 if __name__ == "__main__" :
 	if (len(sys.argv) != 4) :
@@ -97,7 +95,7 @@ if __name__ == "__main__" :
 						else:
 							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0]
 						if tcur > prevTimes[SchemeId]:
-							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.CommPowerState.Sleep / 1000
+							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.PowerState.Sleep / 1000
 						schemeEnergies[SchemeId]['x'].append(tcur)
 						schemeEnergies[SchemeId]['y'].append(consumedEnergy[SchemeId] - curEnergy)
 						prevTimes[SchemeId] = tcur
@@ -131,7 +129,7 @@ if __name__ == "__main__" :
 							minWorkflowEnergy = float("inf")
 							for potentialWorkflowId in potentialWorkflowIds:
 								energyAndTime = device.calcConsumedEnergy(device.Workflows[potentialWorkflowId], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
-								if ((energyAndTime[0] + device.CommPowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
+								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
 									nextWorkFlowId = potentialWorkflowId
 					curWorkFlowIds[SchemeId] = nextWorkFlowId
 					curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
@@ -151,7 +149,7 @@ if __name__ == "__main__" :
 							minWorkflowEnergy = float("inf")
 							for potentialWorkflowId in potentialWorkflowIds:
 								energyAndTime = device.calcConsumedEnergy(device.Workflows[int(potentialWorkflowId)], protocolPDRs[device.Workflows[int(potentialWorkflowId)].ProtocolId])
-								if ((energyAndTime[0] + device.CommPowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
+								if ((energyAndTime[0] + device.PowerState.Sleep * energyAndTime[2] / 1000) / granularity) < minWorkflowEnergy:
 									nextWorkFlowId = potentialWorkflowId
 					curWorkFlowIds[SchemeId] = nextWorkFlowId
 					curWorkFlows[SchemeId] = device.Workflows[int(nextWorkFlowId)]
