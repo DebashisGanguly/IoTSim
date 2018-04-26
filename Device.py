@@ -84,8 +84,8 @@ class Device:
 			ProcAlgoName = procAlgoItem['Name']
 			ProcTimePerBit = float(procAlgoItem['ProcTimePerBit'])
 			CompressionRatio = float(procAlgoItem['CompressionRatio'])
-			Criticality = float(procAlgoItem['Criticality'])
-			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit, CompressionRatio, Criticality)
+			Accuracy = float(procAlgoItem['Accuracy'])
+			ProcAlgoObj = ProcAlgo(ProcAlgoName, ProcTimePerBit, CompressionRatio, Accuracy)
 			self.ProcAlgos[ProcAlgoId] = ProcAlgoObj
 
 		networkingItem = configItems['Networking']
@@ -103,11 +103,10 @@ class Device:
 			MACOverhead = float(protocolItem['MACOverhead'])
 			IPv6Overhead = float(protocolItem['IPv6Overhead'])
 			SynchroPeriod = float(protocolItem['SynchroPeriod'])
-			ClockAccuracy = float(protocolItem['ClockAccuracy'])
 			PacketDeliveryRatio = float(protocolItem['PacketDeliveryRatio'])
 			ProtocolSpecificParam = protocolItem['ProtocolSpecificParam']
 
-			NetProtocolObj = NetProtocolFactory.getNetProtocol(ProtocolName, TechnoName = ProtocolName, Rx = Rx, Tx = Tx, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, ClockAccuracy = ClockAccuracy, PacketDeliveryRatio = PacketDeliveryRatio, ProtocolSpecificParam = ProtocolSpecificParam)
+			NetProtocolObj = NetProtocolFactory.getNetProtocol(ProtocolName, TechnoName = ProtocolName, Rx = Rx, Tx = Tx, MaxPacketSize = MaxPacketSize, PHYRate = PHYRate, PHYOverhead = PHYOverhead, MACOverhead = MACOverhead, IPv6Overhead = IPv6Overhead, SynchroPeriod = SynchroPeriod, PacketDeliveryRatio = PacketDeliveryRatio, ProtocolSpecificParam = ProtocolSpecificParam)
 			self.Protocols[ProtocolId] = NetProtocolObj
 
 		contextItem = configItems['Context']
@@ -204,5 +203,5 @@ class Device:
 		retList.append(CommEnergyExpense)
 		retList.append(busyTime)
 		retList.append(sleepTime)
-		
-                return retList
+
+		return retList

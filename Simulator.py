@@ -90,7 +90,7 @@ if __name__ == "__main__" :
 							print("Scheme: " + device.Schemes[SchemeId].Name + " with protocol: " + device.Protocols[device.Workflows[curWorkFlowIds[SchemeId]].ProtocolId].TechnoName + " has PDR = 0. No communication will take place. May miss critical information.")
 							schemeSensor = device.Sensors[curWorkFlows[SchemeId].SensorId]
 							schemeProcAlgo = device.ProcAlgos[curWorkFlows[SchemeId].ProcAlgoId]
-							critScore[SchemeId] = critScore[SchemeId] - schemeSensor.Criticality * schemeProcAlgo.Criticality * int(senseTags[2])
+							critScore[SchemeId] = critScore[SchemeId] - schemeSensor.Criticality * schemeProcAlgo.Accuracy * int(senseTags[2])
 							#consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + 1000000000
 						else:
 							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0]
@@ -136,7 +136,7 @@ if __name__ == "__main__" :
 					#if int(curWorkFlows[SchemeId].SensorId) == 1:
 					schemeSensor = device.Sensors[curWorkFlows[SchemeId].SensorId]
 					schemeProcAlgo = device.ProcAlgos[curWorkFlows[SchemeId].ProcAlgoId]
-					critScore[SchemeId] = critScore[SchemeId] + schemeSensor.Criticality * schemeProcAlgo.Criticality * int(senseTags[2])
+					critScore[SchemeId] = critScore[SchemeId] + schemeSensor.Criticality * schemeProcAlgo.Accuracy * int(senseTags[2])
 				#use rules with incident motion to change workflow
 			else:
 				sensor1['x'].append(tcur)
@@ -184,7 +184,7 @@ if __name__ == "__main__" :
 		criticalities['data'][0]['y'].append(critScore[SchemeId])
 		print("Scheme: " + device.Schemes[SchemeId].Name + "\n")
 		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " mW\n")
-		print("\Criticality score: " + str(critScore[SchemeId]) + " \n")
+		print("\tCriticality score: " + str(critScore[SchemeId]) + " \n")
 	
 	energies['data'].append(sensor1)
 

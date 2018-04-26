@@ -47,35 +47,35 @@
           "Name": "Identity",
           "ProcTimePerBit": "0",
           "CompressionRatio":"1.0",
-	  "Criticality": "1.0"
+	  "Accuracy": "1.0"
         },
         {
           "Id": "2",
           "Name": "Aggregate",
           "ProcTimePerBit": "0.11e-9",
           "CompressionRatio":"0.0",
-	  "Criticality": "1.0"
+	  "Accuracy": "1.0"
         },
         {
           "Id": "3",
           "Name": "VideoProcessing",
           "ProcTimePerBit": "1.1e-8",
           "CompressionRatio":"0.0",
-	  "Criticality": "0.9"
+	  "Accuracy": "0.9"
         },
         {
           "Id": "4",
           "Name": "VideoCompression",
           "ProcTimePerBit": "0.11e-9",
           "CompressionRatio":"0.25",
-	  "Criticality": "1.0"
+	  "Accuracy": "1.0"
         },
         {
           "Id": "5",
           "Name": "VideoFFT",
           "ProcTimePerBit": "0.11e-8",
           "CompressionRatio":"0.1",
-	  "Criticality": "0.7"
+	  "Accuracy": "0.7"
         }
       ]
     },
@@ -92,7 +92,6 @@
           "MACOverhead": "48",
           "IPv6Overhead": "16",
           "SynchroPeriod": "32000",
-          "ClockAccuracy": "inf",
           "PacketDeliveryRatio": "100",
           "ProtocolSpecificParam": {
             "TIFS": "150",
@@ -110,7 +109,6 @@
           "MACOverhead": "80",
           "IPv6Overhead": "320",
           "SynchroPeriod": "163830000000",
-          "ClockAccuracy": "inf",
           "PacketDeliveryRatio": "100",
           "ProtocolSpecificParam": {
             "SIFS": "9.0",
