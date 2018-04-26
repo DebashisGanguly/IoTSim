@@ -175,7 +175,7 @@ class Device:
 		procTime = 8 * ApplicationDataSize * procAlgo.ProcTimePerBit
 		dataToSend = procAlgo.CompressionRatio * ApplicationDataSize
 		CommEnergyExpense = 0
-		busyTime = procTime + sensor.AcquireTime
+		busyTime = (procTime + sensor.AcquireTime) * 1000
 		sleepTime = sensor.SensingPeriod - busyTime
 		if ProtocolId != 0 and ProtocolId != -1:
 			CommProtocol = self.Protocols[ProtocolId]

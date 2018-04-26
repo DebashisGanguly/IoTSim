@@ -98,11 +98,12 @@ if __name__ == "__main__" :
 							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + energyAndTime[0] / 1000
 						if tcur > prevTimes[SchemeId]:
 							consumedEnergy[SchemeId] = consumedEnergy[SchemeId] + (tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]) * device.PowerState.Sleep / 1000000
-						schemeEnergies[SchemeId]['x'].append(tcur)
+						if 100000 < count and count < 101000:
+							schemeEnergies[SchemeId]['x'].append(tcur)
 						#if SchemeId == '1' or SchemeId == '6':
 						#	print("Scheme: " + device.Schemes[SchemeId].Name + " consumed " + str(energyAndTime[0]) + " busy energy and " + str(consumedEnergy[SchemeId] - curEnergy) + " total energy actually.")
 						#	print("Actual sleep time: " + str(tcur - prevTimes[SchemeId] - lastBusyTimes[SchemeId]))
-						schemeEnergies[SchemeId]['y'].append(consumedEnergy[SchemeId] - curEnergy)
+							schemeEnergies[SchemeId]['y'].append(consumedEnergy[SchemeId] - curEnergy)
 						prevTimes[SchemeId] = tcur
 						lastBusyTimes[SchemeId] = energyAndTime[1]
 		tcur = tcur + granularity
@@ -197,17 +198,17 @@ if __name__ == "__main__" :
 		criticalities['data'][0]['x'].append(device.Schemes[SchemeId].Name)
 		criticalities['data'][0]['y'].append(critScore[SchemeId])
 		print("Scheme: " + device.Schemes[SchemeId].Name + "\n")
-		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " J\n")
+		print("\tConsumed Energy: " + str(consumedEnergy[SchemeId]) + " kJ\n")
 		print("\tCriticality score: " + str(critScore[SchemeId]) + " \n")
 	
 	energies['data'].append(sensor1)
 
-	with open('plot_energies_med2.json', 'w') as fp:
+	with open('plot_energies_med.json', 'w') as fp:
 		json.dump(energies, fp)
-	plotly.offline.plot(energies, filename = 'energies_med2.html')
-	with open('plot_totalEnergies_med2.json', 'w') as fp:
+	plotly.offline.plot(energies, filename = 'energies_med.html')
+	with open('plot_totalEnergies_med.json', 'w') as fp:
 		json.dump(totalEnergies, fp)
-	plotly.offline.plot(totalEnergies, filename = 'totalEnergies_med2.html')
-	with open('plot_criticalities_med2.json', 'w') as fp:
+	plotly.offline.plot(totalEnergies, filename = 'totalEnergies_med.html')
+	with open('plot_criticalities_med.json', 'w') as fp:
 		json.dump(criticalities, fp)
-	plotly.offline.plot(criticalities, filename = 'criticalities_med2.html')
+	plotly.offline.plot(criticalities, filename = 'criticalities_med.html')
