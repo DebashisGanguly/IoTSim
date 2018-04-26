@@ -185,6 +185,7 @@ class Device:
 
 	def calcConsumedEnergy(self, workflow, pdr):
 		#minCommEnergyExpense = -1
+		retList = []
 		ProtocolId = int(workflow.ProtocolId)
 		SensorId = int(workflow.SensorId)
 		ProcAlgoId = int(workflow.ProcAlgoId)
@@ -198,7 +199,13 @@ class Device:
 		sleepTime = sensor.SensingPeriod - busyTime
 		if ProtocolId != 0 and ProtocolId != -1:
 			CommProtocol = self.Protocols[ProtocolId]
-			CommProtocol.PacketDeliveryRatio = 100 * pdr
+			if pdr == 0:
+				retList.append(float("inf"))
+				retList.append(busyTime)
+				retList.append(sleepTime)#CommProtocol.PacketDeliveryRatio = 0.003
+				return retList
+			else:
+				CommProtocol.PacketDeliveryRatio = 100 * pdr
 		#for CommProtocol in self.CommProtocolList:
 			protocolTimings = CommProtocol.detProtocolTimings(float(dataToSend * 8), sensor.SensingPeriod)
 			CommEnergyExpense =   protocolTimings['timeTxMode']    * CommProtocol.Tx \
@@ -213,7 +220,6 @@ class Device:
 		else:
 			CommEnergyExpense = CommEnergyExpense + \
 								((sensor.AcquireTime + procTime) * self.CommPowerState.CPUActive + sensor.AcquireTime * (sensor.StaticPower + sensor.DynamicPower)) / 1000
-		retList = []
 		retList.append(CommEnergyExpense)
 		retList.append(busyTime)
 		retList.append(sleepTime)

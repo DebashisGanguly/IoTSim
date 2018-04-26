@@ -148,7 +148,9 @@ class NetProtocol:
 		numFullCommPeriod = fuzzyFloor(ApplicationPeriod * pow(10, 3) / actualInterval)
 		
 		fullCommPeriodParam = self.detProtocolCapacity(MaxApplicationPeriod)
-		
+		if fullCommPeriodParam['totalData'] == 0:
+			print("Amount of data: " + str(AmountOfData) + ", Sensing period: " + str(ApplicationPeriod))
+			print("Protocol Name: " + str(self.TechnoName) + ", PDR: " + str(self.PacketDeliveryRatio))
 		numMaxAppTransmitPeriod = fuzzyFloor(AmountOfData / fullCommPeriodParam['totalData']) 	
 		
 		fullCommPeriodParam['sleepTime'] = actualInterval - (fullCommPeriodParam['txTime'] + fullCommPeriodParam['rxTime'] + fullCommPeriodParam['idleTime'])
