@@ -16,7 +16,7 @@
           "AcquireTime": "0.88e-5",
           "StaticPower": "0.33",
           "DynamicPower": "0",
-		  "Criticality": "0.0"
+          "Criticality": "0.0"
         },
         {
           "Id": "2",
@@ -26,7 +26,7 @@
           "AcquireTime": "71.66",
           "StaticPower": "0",
           "DynamicPower": "381",
-		  "Criticality": "1.0"
+	  "Criticality": "1.0"
         },
         {
           "Id": "3",
@@ -36,7 +36,7 @@
           "AcquireTime": "17.915",
           "StaticPower": "0",
           "DynamicPower": "262",
-		  "Criticality": "0.5"
+	  "Criticality": "0.5"
         }
       ]
     },
@@ -47,35 +47,35 @@
           "Name": "Identity",
           "ProcTimePerBit": "0",
           "CompressionRatio":"1.0",
-		  "Criticality": "1.0"
+	  "Criticality": "1.0"
         },
         {
           "Id": "2",
           "Name": "Aggregate",
           "ProcTimePerBit": "0.11e-9",
           "CompressionRatio":"0.0",
-		  "Criticality": "1.0"
+	  "Criticality": "1.0"
         },
         {
           "Id": "3",
           "Name": "VideoProcessing",
           "ProcTimePerBit": "1.1e-8",
           "CompressionRatio":"0.0",
-		  "Criticality": "0.9"
+	  "Criticality": "0.9"
         },
         {
           "Id": "4",
           "Name": "VideoCompression",
           "ProcTimePerBit": "0.11e-9",
           "CompressionRatio":"0.25",
-		  "Criticality": "1.0"
+	  "Criticality": "1.0"
         },
         {
           "Id": "5",
           "Name": "VideoFFT",
           "ProcTimePerBit": "0.11e-8",
           "CompressionRatio":"0.1",
-		  "Criticality": "0.7"
+	  "Criticality": "0.7"
         }
       ]
     },
